@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle PyME • {{ s.razon_social }}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    * { font-family: 'Inter', sans-serif; }
+    :root { --navy:#002060; --blue:#017DFC; --gold:#FFC000; }
+    .card { background:white; border-radius:14px; box-shadow:0 2px 10px rgba(0,32,96,.07); }
+    .tag { font-size:11px; font-weight:700; padding:2px 10px; border-radius:8px; }
+  </style>
+</head>
+<body style="background:#f0f4ff; min-height:100vh;">
+
+<header class="bg-white shadow-sm">
+  <div class="max-w-4xl mx-auto px-6 py-4 flex items-center gap-3">
+    <a href="/resultados" class="text-sm font-semibold text-gray-400 hover:text-navy transition">
+      &#8592; Volver al panel
+    </a>
+    <span class="text-gray-300">/</span>
+    <span class="font-bold text-sm" style="color:var(--navy)">{{ s.razon_social or 'Sin nombre' }}</span>
+    <div class="ml-auto">
+      <a href="/resultados/export/csv"
+         class="text-xs font-bold px-3 py-1.5 rounded-lg text-white" style="background:var(--blue)">
+        &#11015; Exportar CSV
+      </a>
+    </div>
+  </div>
+  <div class="h-1" style="background:linear-gradient(90deg,var(--blue),var(--gold))"></div>
+</header>
+
+<main class="max-w-4xl mx-auto px-6 py-8">
+
+  <!-- Cabecera empresa -->
+  <div class="card p-7 mb-6 flex flex-col md:flex-row md:items-center gap-6">
+    <div class="flex-1">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="tag {{ 'bg-green-100 text-green-800' if s.segment == 'madura' else 'bg-yellow-100 text-yellow-800' }}">
+          {{ s.segment_label }}
+        </span>
+        {% if s.completed %}
+          <span class="tag" style="background:#e8f0fd; color:var(--blue)">&#10003; Completada</span>
+        {% else %}
+          <span class="tag bg-gray-100 text-gray-500">En progreso</span>
+        {% endif %}
+      </div>
+      <h1 class="text-2xl font-extrabold mb-1" style="color:var(--navy)">{{ s.razon_social or 'Sin nombre' }}</h1>
+      <p class="text-gray-500 text-sm font-mono">RUT: {{ s.rut or '&#8212;' }}</p>
+      <p class="text-gray-400 text-xs mt-0.5">
+        &#128231; {{ s.email or 'Sin email' }} &bull; {{ s.created_at[:16] if s.created_at else '&#8212;' }}
+      </p>
+    </div>
+    <!-- Score donut -->
+    <div class="flex flex-col items-center gap-1 shrink-0">
+      <div class="relative w-24 h-24">
+        <svg viewBox="0 0 36 36" class="w-24 h-24 -rotate-90">
+          <circle cx="18" cy="18" r="15" fill="none" stroke="#e5e7eb" stroke-width="3"/>
+          <circle cx="18" cy="18" r="15" fill="none" stroke="#017DFC" stroke-width="3"
+                  stroke-dasharray="{{ (s.pct * 94.2 / 100)|round(1) }} 94.2" stroke-linecap="round"/>
+        </svg>
+        <div class="absolute inset-0 flex flex-col items-center justify-center">
+          <span class="text-2xl font-black" style="color:var(--navy)">{{ s.pct }}%</span>
+        </div>
+      </div>
+      <p class="text-xs text-gray-400">Madurez</p>
+      <p class="text-xs text-gray-300">{{ s.score }} / {{ s.max_score }} pts</p>
+    </div>
+  </div>
+
+  <!-- Areas debiles -->
+  <div class="card p-6 mb-6">
+    <h2 class="font-bold text-base mb-4" style="color:var(--navy)">
+      &#127919; Conversatorios y mentorías recomendadas
+    </h2>
+    <div class="flex flex-col gap-3">
+      {% for area_key in s.weak_areas %}
+        {% set area = area_labels[area_key] %}
+        <div class="flex items-start gap-3 px-4 py-3 rounded-xl border-l-4"
+             style="border-left-color:var(--blue); background:#f8fbff">
+          <span class="text-2xl">{{ area.emoji }}</span>
+          <div>
+            <div class="font-bold text-sm" style="color:var(--navy)">{{ area.label }}</div>
+            <div class="text-xs text-gray-500">{{ area.desc }}</div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Respuestas detalladas -->
+  <div class="card p-6">
+    <h2 class="font-bold text-base mb-5" style="color:var(--navy)">&#128203; Respuestas completas</h2>
+    <div class="flex flex-col gap-4">
+      {% for q in questions %}
+        {% set ans = s.answers.get(q.id|string, '') %}
+        <div class="pb-4 border-b border-gray-100 last:border-0">
+          <div class="flex items-start gap-2 mb-1">
+            <span class="text-base shrink-0">{{ q.emoji }}</span>
+            <div>
+              <p class="text-xs font-bold uppercase text-gray-400"
+                 style="letter-spacing:.07em">P{{ q.id }} / {{ q.id + 24 - q.id }} &bull; {{ q.block }}</p>
+              <p class="font-semibold text-sm" style="color:var(--navy)">{{ q.text }}</p>
+            </div>
+          </div>
+          {% if ans %}
+            {% set display = ans.replace('|||',' → ') %}
+            <div class="ml-7">
+              {% if q.type in ['choice','bool','scale'] %}
+                {# Buscar label de la opcion #}
+                {% set ans_base = ans.split('|||')[0] %}
+                {% set matched = namespace(label='') %}
+                {% for opt in q.options %}
+                  {% if opt.value == ans_base %}
+                    {% set matched.label = opt.icon + ' ' + opt.label %}
+                  {% endif %}
+                {% endfor %}
+                <span class="inline-block px-3 py-1.5 rounded-lg text-sm font-medium"
+                      style="background:#e8f0fd; color:var(--navy)">
+                  {{ matched.label or ans_base }}
+                </span>
+                {% if '|||' in ans %}
+                  <span class="text-xs text-gray-500 ml-2">&#8594; {{ ans.split('|||')[1] }}</span>
+                {% endif %}
+              {% elif q.type == 'multi' %}
+                <div class="flex flex-wrap gap-2">
+                {% for val in ans.split(',') %}
+                  {% set matched = namespace(label=val) %}
+                  {% for opt in q.options %}
+                    {% if opt.value == val %}
+                      {% set matched.label = opt.icon + ' ' + opt.label %}
+                    {% endif %}
+                  {% endfor %}
+                  <span class="tag" style="background:#e8f0fd;color:var(--navy)">{{ matched.label }}</span>
+                {% endfor %}
+                </div>
+              {% else %}
+                <p class="text-sm text-gray-600 italic">&ldquo;{{ ans }}&rdquo;</p>
+              {% endif %}
+            </div>
+          {% else %}
+            <p class="ml-7 text-xs text-gray-300 italic">Sin respuesta</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</main>
+</body>
+</html>

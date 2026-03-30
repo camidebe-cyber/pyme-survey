@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cuestionario PyME • Walmart Chile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+
+    :root {
+      --wm-blue:   #0053e2;
+      --wm-spark:  #ffc220;
+      --wm-dark:   #001e60;
+      --wm-light:  #e8f0fd;
+    }
+
+    /* Panel izquierdo */
+    .left-panel {
+      background: linear-gradient(160deg, var(--wm-dark) 0%, var(--wm-blue) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .left-panel::before {
+      content: '';
+      position: absolute;
+      bottom: -80px; right: -80px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: rgba(255,194,32,0.12);
+    }
+    .left-panel::after {
+      content: '';
+      position: absolute;
+      top: -60px; left: -60px;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+    }
+
+    /* Pill badge */
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,194,32,0.18);
+      border: 1px solid rgba(255,194,32,0.35);
+      border-radius: 999px;
+      padding: 5px 14px;
+      font-size: .7rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--wm-spark);
+    }
+
+    /* Inputs */
+    .wm-input {
+      width: 100%; border: none;
+      border-bottom: 2px solid #d1d5db;
+      background: transparent;
+      font-size: 1.1rem; font-weight: 600;
+      color: var(--wm-dark);
+      padding: 10px 4px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .wm-input:focus { border-color: var(--wm-blue); }
+    .wm-input::placeholder { color: #c5cad6; font-weight: 400; }
+
+    /* Btn */
+    .btn-primary {
+      background: var(--wm-blue); color: #fff;
+      border: none; border-radius: 14px;
+      padding: 16px 28px;
+      font-size: 1rem; font-weight: 700;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .btn-primary:hover { background: var(--wm-dark); transform: translateY(-2px); }
+    .btn-primary:disabled { background: #9ca3af; transform: none; cursor: not-allowed; }
+
+    /* Animaciones */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(18px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .fu1 { animation: fadeUp .5s .05s ease both; }
+    .fu2 { animation: fadeUp .5s .2s  ease both; }
+    .fu3 { animation: fadeUp .5s .35s ease both; }
+
+    /* Spark decorativo */
+    @keyframes rotateSpark {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    .spark-rotate { animation: rotateSpark 18s linear infinite; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col md:flex-row">
+
+  <!-- PANEL IZQUIERDO: Branding -->
+  <aside class="left-panel flex flex-col justify-between p-8 md:p-12
+               md:w-[45%] text-white min-h-[280px] md:min-h-screen relative z-10">
+
+    <!-- Logo -->
+    <div class="flex items-center gap-3">
+      <svg width="36" height="36" viewBox="0 0 60 60">
+        <g fill="#ffc220">
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(0 30 30)"/>
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(60 30 30)"/>
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(120 30 30)"/>
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(180 30 30)"/>
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(240 30 30)"/>
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(300 30 30)"/>
+        </g>
+      </svg>
+      <div>
+        <div class="font-black text-sm tracking-tight">Walmart Chile</div>
+        <div class="text-white/60 text-xs">Programa PyME</div>
+      </div>
+    </div>
+
+    <!-- Centro: titulo + bullets -->
+    <div class="my-8 md:my-0">
+      <span class="pill mb-5 inline-flex">⭐ Diagnóstico 2025</span>
+      <h1 class="text-3xl md:text-4xl lg:text-5xl font-black leading-tight mb-4">
+        Potencia tu PyME<br>con Walmart
+      </h1>
+      <p class="text-white/70 text-base leading-relaxed mb-8 max-w-xs">
+        Completar el cuestionario tarda <strong class="text-white">~4 minutos</strong>
+        y te conecta con mentorías y conversatorios a tu medida.
+      </p>
+      <ul class="flex flex-col gap-3 text-sm">
+        <li class="flex items-center gap-3">
+          <span class="w-7 h-7 rounded-lg flex items-center justify-center text-base"
+                style="background:rgba(255,194,32,.25)">&#10003;</span>
+          <span class="text-white/80">25 preguntas de opción múltiple</span>
+        </li>
+        <li class="flex items-center gap-3">
+          <span class="w-7 h-7 rounded-lg flex items-center justify-center text-base"
+                style="background:rgba(255,194,32,.25)">&#9201;</span>
+          <span class="text-white/80">Resultado instantáneo al terminar</span>
+        </li>
+        <li class="flex items-center gap-3">
+          <span class="w-7 h-7 rounded-lg flex items-center justify-center text-base"
+                style="background:rgba(255,194,32,.25)">&#128274;</span>
+          <span class="text-white/80">Tus datos solo para el Programa PyME</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Footer del panel -->
+    <p class="text-white/30 text-xs">Walmart Chile &bull; Temporada 2025</p>
+  </aside>
+
+  <!-- PANEL DERECHO: Formulario -->
+  <main class="flex-1 flex items-center justify-center bg-white p-6 md:p-12">
+    <div class="w-full max-w-md">
+
+      <div class="fu1 mb-8">
+        <h2 class="text-2xl font-extrabold mb-1" style="color:var(--wm-dark)">
+          ¿Quién eres? &#128075;
+        </h2>
+        <p class="text-gray-400 text-sm">Llena estos datos para identificar tu empresa.</p>
+      </div>
+
+      <form method="post" action="/formulario/start"
+            id="form-start" onsubmit="return onSubmit()"
+            class="fu2 flex flex-col gap-6">
+
+        <!-- RUT -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest mb-2"
+                 style="color:var(--wm-blue)">RUT Empresa *</label>
+          <input class="wm-input" type="text" name="rut" id="rut"
+                 placeholder="76.543.210-K" maxlength="12" required
+                 oninput="fmtRut(this)">
+          <p id="rut-msg" class="text-xs text-gray-400 mt-1">Formato: 12.345.678-9</p>
+        </div>
+
+        <!-- Razon Social -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest mb-2"
+                 style="color:var(--wm-blue)">Razón Social *</label>
+          <input class="wm-input" type="text" name="razon_social"
+                 placeholder="Nombre legal de tu empresa"
+                 maxlength="120" required autocomplete="organization">
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest mb-2"
+                 style="color:var(--wm-blue)">Correo de contacto *</label>
+          <input class="wm-input" type="email" name="email" id="email"
+                 placeholder="correo@empresa.cl"
+                 maxlength="120" required autocomplete="email"
+                 oninput="chkEmail(this)">
+          <p id="email-msg" class="text-xs text-gray-400 mt-1">
+            Para coordinarte con el equipo Walmart
+          </p>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" id="btn" class="btn-primary w-full mt-2">
+          Comenzar cuestionario
+          <svg width="18" height="18" fill="none" stroke="currentColor"
+               stroke-width="2.5" viewBox="0 0 24 24">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+
+        <p class="text-xs text-gray-300 text-center">
+          Tus datos son usados solo para el Programa PyME de Walmart Chile.
+        </p>
+      </form>
+
+      <div class="fu3 mt-8 pt-6 border-t border-gray-100 text-center">
+        <p class="text-xs text-gray-300">
+          ¿Prefieres la versión clásica?
+          <a href="/" class="underline hover:text-gray-500 transition-colors">Ir al formulario original</a>
+        </p>
+      </div>
+    </div>
+  </main>
+
+</body>
+<script>
+function fmtRut(el) {
+  let v = el.value.replace(/[^0-9kK]/g,'').toUpperCase();
+  if (!v) { el.value=''; return; }
+  const dv = v.slice(-1), num = v.slice(0,-1);
+  let f = num.length>6 ? num.slice(0,-6)+'.'+num.slice(-6,-3)+'.'+num.slice(-3)
+        : num.length>3 ? num.slice(0,-3)+'.'+num.slice(-3) : num;
+  el.value = v.length>=2 ? f+'-'+dv : v;
+  const ok  = /^\d{1,2}(\.\d{3}){1,2}-[\dkK]$/.test(el.value);
+  const msg = document.getElementById('rut-msg');
+  msg.textContent = ok ? '\u2713 RUT válido' : 'Formato: 12.345.678-9';
+  msg.style.color = ok ? '#2a8703' : '#9ca3af';
+}
+function chkEmail(el) {
+  const ok  = /^[^@]+@[^@]+\.[^@]+$/.test(el.value);
+  const msg = document.getElementById('email-msg');
+  if (el.value.length > 3) {
+    msg.textContent = ok ? '\u2713 Correo válido' : 'Ingresa un correo válido';
+    msg.style.color = ok ? '#2a8703' : '#cc6600';
+  }
+}
+function onSubmit() {
+  const btn = document.getElementById('btn');
+  btn.disabled    = true;
+  btn.innerHTML   = 'Iniciando... <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+  return true;
+}
+</script>
+</html>

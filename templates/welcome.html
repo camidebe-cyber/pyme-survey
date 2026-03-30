@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cuestionario PyME • Walmart Chile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    * { font-family: 'Inter', sans-serif; }
+    :root { --navy:#002060; --blue:#017DFC; --cyan:#00B0F0; --gold:#FFC000; }
+    input:focus { outline:none; border-color:var(--blue) !important; box-shadow:0 2px 0 var(--blue); }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .fade-up   { animation: fadeUp .5s ease both; }
+    .fade-up-2 { animation: fadeUp .5s .15s ease both; }
+    .fade-up-3 { animation: fadeUp .5s .3s  ease both; }
+    .btn-start {
+      background: var(--navy); color: white;
+      transition: all .22s ease;
+    }
+    .btn-start:hover   { background: var(--blue); transform: translateX(4px); }
+    .btn-start:disabled { background: #9ca3af; cursor: not-allowed; transform: none; }
+  </style>
+</head>
+<body style="background:linear-gradient(135deg,#f0f4ff 0%,#e8f5fb 100%); min-height:100vh;">
+
+<!-- Header -->
+<header class="bg-white shadow-sm">
+  <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+    <!-- Logo Walmart -->
+    <div class="flex items-center gap-3">
+      <!-- Spark SVG -->
+      <svg width="38" height="38" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+        <g fill="#FFC220">
+          <ellipse cx="30" cy="7"  rx="4.2" ry="8.5" transform="rotate(0   30 30)"/>
+          <ellipse cx="30" cy="7"  rx="4.2" ry="8.5" transform="rotate(60  30 30)"/>
+          <ellipse cx="30" cy="7"  rx="4.2" ry="8.5" transform="rotate(120 30 30)"/>
+          <ellipse cx="30" cy="7"  rx="4.2" ry="8.5" transform="rotate(180 30 30)"/>
+          <ellipse cx="30" cy="7"  rx="4.2" ry="8.5" transform="rotate(240 30 30)"/>
+          <ellipse cx="30" cy="7"  rx="4.2" ry="8.5" transform="rotate(300 30 30)"/>
+        </g>
+      </svg>
+      <div>
+        <div class="font-extrabold text-base tracking-tight" style="color:var(--navy)">Walmart Chile</div>
+        <div class="text-xs text-gray-400 -mt-0.5">Programa PyME</div>
+      </div>
+    </div>
+    <a href="/resultados" class="text-xs font-semibold px-3 py-1.5 rounded-lg border-2
+       border-gray-200 text-gray-500 hover:border-navy hover:text-navy transition-all">
+      &#128202; Panel de resultados
+    </a>
+  </div>
+  <div class="h-1 w-full" style="background:var(--gold)"></div>
+</header>
+
+<main class="max-w-2xl mx-auto px-4 py-12">
+
+  <!-- Hero -->
+  <div class="text-center mb-10 fade-up">
+    <!-- Spark grande -->
+    <div class="flex justify-center mb-5">
+      <svg width="72" height="72" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+        <g fill="#002060" opacity="0.12">
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(0   30 30)"/>
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(60  30 30)"/>
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(120 30 30)"/>
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(180 30 30)"/>
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(240 30 30)"/>
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(300 30 30)"/>
+        </g>
+        <g fill="#FFC220">
+          <ellipse cx="30" cy="7" rx="3.6" ry="7.5" transform="rotate(0   30 30)"/>
+          <ellipse cx="30" cy="7" rx="3.6" ry="7.5" transform="rotate(60  30 30)"/>
+          <ellipse cx="30" cy="7" rx="3.6" ry="7.5" transform="rotate(120 30 30)"/>
+          <ellipse cx="30" cy="7" rx="3.6" ry="7.5" transform="rotate(180 30 30)"/>
+          <ellipse cx="30" cy="7" rx="3.6" ry="7.5" transform="rotate(240 30 30)"/>
+          <ellipse cx="30" cy="7" rx="3.6" ry="7.5" transform="rotate(300 30 30)"/>
+        </g>
+      </svg>
+    </div>
+    <h1 class="text-4xl md:text-5xl font-extrabold mb-3 leading-tight" style="color:var(--navy)">
+      Hola, PyME &#128075;
+    </h1>
+    <p class="text-gray-500 text-lg max-w-lg mx-auto leading-relaxed">
+      Este cuestionario nos ayuda a conocerte y conectarte con los
+      <strong style="color:var(--navy)">conversatorios y mentorías</strong>
+      que más te sirven dentro del ecosistema Walmart.
+    </p>
+    <div class="flex justify-center gap-6 mt-5 text-sm text-gray-400 flex-wrap">
+      <span>&#9201;&nbsp;~4 minutos</span>
+      <span>&#10003;&nbsp;25 preguntas</span>
+      <span>&#127919;&nbsp;Resultado instantáneo</span>
+    </div>
+  </div>
+
+  <!-- Formulario -->
+  <div class="bg-white rounded-2xl shadow-md p-8 fade-up-2"
+       style="border-top: 4px solid var(--gold)">
+
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+           style="background:#e8f0fd">
+        <span style="color:var(--blue); font-size:1.1rem;">&#127970;</span>
+      </div>
+      <div>
+        <h2 class="font-bold text-base" style="color:var(--navy)">Antes de comenzar</h2>
+        <p class="text-gray-400 text-xs">Identifícate para hacer seguimiento de tu progreso.</p>
+      </div>
+    </div>
+
+    <form method="post" action="/start" id="start-form" onsubmit="return validate()">
+
+      <!-- RUT -->
+      <div class="mb-5">
+        <label class="block text-sm font-semibold mb-1.5" style="color:var(--navy)">
+          RUT Empresa <span class="text-red-400">*</span>
+        </label>
+        <input type="text" name="rut" id="rut-input"
+               placeholder="Ej: 76.543.210-K"
+               maxlength="12" required
+               autocomplete="off"
+               class="w-full border-b-2 border-gray-200 bg-transparent text-xl font-semibold
+                      py-3 px-1 transition-all placeholder-gray-300"
+               style="color:var(--navy)"
+               oninput="formatRut(this)">
+        <p id="rut-hint" class="text-xs text-gray-400 mt-1">Formato: 12.345.678-9</p>
+      </div>
+
+      <!-- Razon Social -->
+      <div class="mb-5">
+        <label class="block text-sm font-semibold mb-1.5" style="color:var(--navy)">
+          Razón Social <span class="text-red-400">*</span>
+        </label>
+        <input type="text" name="razon_social"
+               placeholder="Nombre legal de tu empresa"
+               maxlength="120" required
+               autocomplete="organization"
+               class="w-full border-b-2 border-gray-200 bg-transparent text-xl font-semibold
+                      py-3 px-1 transition-all placeholder-gray-300"
+               style="color:var(--navy)">
+      </div>
+
+      <!-- Email -->
+      <div class="mb-8">
+        <label class="block text-sm font-semibold mb-1.5" style="color:var(--navy)">
+          Correo de contacto <span class="text-red-400">*</span>
+        </label>
+        <input type="email" name="email" id="email-input"
+               placeholder="correo@empresa.cl"
+               maxlength="120" required
+               autocomplete="email"
+               class="w-full border-b-2 border-gray-200 bg-transparent text-xl font-semibold
+                      py-3 px-1 transition-all placeholder-gray-300"
+               style="color:var(--navy)"
+               oninput="checkEmail(this)">
+        <p id="email-hint" class="text-xs text-gray-400 mt-1">Para coordinar conversatorios y mentorías contigo</p>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" id="submit-btn"
+              class="btn-start w-full py-4 rounded-xl font-bold text-lg
+                     flex items-center justify-center gap-3">
+        Comenzar cuestionario &#8594;
+      </button>
+
+      <p class="text-xs text-gray-300 text-center mt-4">
+        Tus datos son usados solo para el Programa PyME de Walmart Chile.
+      </p>
+    </form>
+  </div>
+
+</main>
+
+<script>
+function formatRut(input) {
+  let val = input.value.replace(/[^0-9kK]/g, '').toUpperCase();
+  if (!val) { input.value = ''; return; }
+  const dv  = val.slice(-1);
+  const num = val.slice(0, -1);
+  let fmt = '';
+  if (num.length > 6)      fmt = num.slice(0,-6)+'.'+num.slice(-6,-3)+'.'+num.slice(-3);
+  else if (num.length > 3) fmt = num.slice(0,-3)+'.'+num.slice(-3);
+  else                     fmt = num;
+  input.value = val.length >= 2 ? fmt+'-'+dv : val;
+  const ok  = /^\d{1,2}(\.\d{3}){1,2}-[\dkK]$/.test(input.value);
+  const hint = document.getElementById('rut-hint');
+  hint.textContent = ok ? '\u2713 RUT v\u00e1lido' : 'Formato: 12.345.678-9';
+  hint.style.color  = ok ? '#2a8703' : '#9ca3af';
+}
+
+function checkEmail(input) {
+  const ok   = /^[^@]+@[^@]+\.[^@]+$/.test(input.value);
+  const hint = document.getElementById('email-hint');
+  if (input.value.length > 3) {
+    hint.textContent = ok ? '\u2713 Correo v\u00e1lido' : 'Ingresa un correo v\u00e1lido';
+    hint.style.color  = ok ? '#2a8703' : '#cc6600';
+  }
+}
+
+function validate() {
+  const rut = document.getElementById('rut-input').value.trim();
+  const em  = document.getElementById('email-input').value.trim();
+  if (!rut || !em) return false;
+  const btn = document.getElementById('submit-btn');
+  btn.disabled    = true;
+  btn.textContent = 'Iniciando...';
+  return true;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gracias • PyME Walmart</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    * { font-family: 'Inter', sans-serif; }
+    :root { --navy:#002060; --blue:#017DFC; --cyan:#00B0F0; --gold:#FFC000; }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(24px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    @keyframes pulse-spark {
+      0%,100% { transform: scale(1) rotate(0deg); }
+      50%     { transform: scale(1.08) rotate(6deg); }
+    }
+    .fade-up   { animation: fadeUp .5s ease both; }
+    .fade-up-1 { animation-delay:.1s; }
+    .fade-up-2 { animation-delay:.3s; }
+    .fade-up-3 { animation-delay:.5s; }
+    .spark-anim { animation: pulse-spark 2.5s ease-in-out infinite; }
+  </style>
+</head>
+<body style="background:linear-gradient(135deg,#f0f4ff 0%,#e8f5fb 100%); min-height:100vh;">
+
+<!-- Header -->
+<header class="bg-white shadow-sm">
+  <div class="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
+    <svg width="30" height="30" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+      <g fill="#FFC220">
+        <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(0   30 30)"/>
+        <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(60  30 30)"/>
+        <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(120 30 30)"/>
+        <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(180 30 30)"/>
+        <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(240 30 30)"/>
+        <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(300 30 30)"/>
+      </g>
+    </svg>
+    <div>
+      <div class="font-bold text-sm" style="color:var(--navy)">Walmart Chile &bull; Programa PyME</div>
+      <div class="text-xs text-gray-400">Diagnóstico de Madurez Retail</div>
+    </div>
+  </div>
+  <div class="h-1 w-full" style="background:linear-gradient(90deg,var(--blue),var(--gold))"></div>
+</header>
+
+<main class="max-w-2xl mx-auto px-4 py-16 text-center">
+
+  <!-- Spark animado -->
+  <div class="flex justify-center mb-8 fade-up fade-up-1">
+    <div class="spark-anim">
+      <svg width="90" height="90" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+        <g fill="#FFC220">
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(0   30 30)"/>
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(60  30 30)"/>
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(120 30 30)"/>
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(180 30 30)"/>
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(240 30 30)"/>
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(300 30 30)"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Mensaje de gracias -->
+  <div class="fade-up fade-up-1">
+    <h1 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight" style="color:var(--navy)">
+      ¡Muchas gracias{% if company %}, {{ company }}{% endif %}! 🎉
+    </h1>
+    <p class="text-gray-500 text-lg leading-relaxed max-w-lg mx-auto">
+      Completaste el cuestionario de diagnóstico del
+      <strong style="color:var(--navy)">Programa PyME Walmart Chile</strong>.
+      Tu información fue registrada exitosamente.
+    </p>
+  </div>
+
+  <!-- Card de próximos pasos -->
+  <div class="mt-10 bg-white rounded-2xl shadow-md p-8 text-left fade-up fade-up-2"
+       style="border-top:4px solid var(--gold)">
+    <h2 class="text-lg font-extrabold mb-5" style="color:var(--navy)">
+      📝 ¿Qué sigue ahora?
+    </h2>
+    <ol class="flex flex-col gap-4">
+      <li class="flex items-start gap-4">
+        <span class="w-8 h-8 rounded-full text-white text-sm font-bold
+                     flex items-center justify-center shrink-0"
+              style="background:var(--blue)">1</span>
+        <p class="text-gray-600 text-sm pt-1">
+          El equipo de Walmart te contactará vía mail al correo que
+          nos indicaste prontamente.
+        </p>
+      </li>
+      <li class="flex items-start gap-4">
+        <span class="w-8 h-8 rounded-full text-white text-sm font-bold
+                     flex items-center justify-center shrink-0"
+              style="background:var(--gold)">🚀</span>
+        <p class="text-gray-600 text-sm pt-1">
+          Mediremos juntos cómo ayudarte con el impacto en tus ventas mes a mes.
+        </p>
+      </li>
+    </ol>
+  </div>
+
+  <!-- Mensaje de cierre -->
+  <div class="mt-8 fade-up fade-up-3">
+    <p class="text-gray-400 text-sm">
+      Cualquier consulta puedes escribirnos a tu contacto habitual en Walmart.
+    </p>
+    <p class="mt-6 text-xs text-gray-300">
+      Walmart Chile &bull; Programa de Desarrollo PyME
+    </p>
+  </div>
+
+</main>
+</body>
+</html>

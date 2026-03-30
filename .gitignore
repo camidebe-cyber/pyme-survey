@@ -1,0 +1,21 @@
+# Entorno virtual
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Base de datos local (no subir - Render usa su propio disco)
+survey.db
+
+# Archivos de datos sensibles
+*.csv
+*.xlsx
+*.xls
+
+# Variables de entorno
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db

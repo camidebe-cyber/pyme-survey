@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cuestionario PyME • Walmart</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    * { font-family: 'Inter', 'Bogle', sans-serif; }
+
+    :root {
+      --navy:  #002060;
+      --blue:  #017DFC;
+      --cyan:  #00B0F0;
+      --gold:  #FFC000;
+    }
+
+    .bg-navy  { background-color: var(--navy); }
+    .bg-blue  { background-color: var(--blue); }
+    .bg-cyan  { background-color: var(--cyan); }
+    .bg-gold  { background-color: var(--gold); }
+    .text-navy { color: var(--navy); }
+    .text-blue { color: var(--blue); }
+    .text-cyan { color: var(--cyan); }
+    .text-gold { color: var(--gold); }
+    .border-navy { border-color: var(--navy); }
+    .border-blue { border-color: var(--blue); }
+    .border-gold { border-color: var(--gold); }
+
+    /* Animacion de entrada */
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(32px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .slide-up { animation: slideUp 0.38s cubic-bezier(.22,.68,0,1.2) both; }
+
+    /* Progress bar */
+    .progress-fill {
+      transition: width 0.5s cubic-bezier(.4,0,.2,1);
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+    }
+
+    /* Option cards */
+    .opt-card {
+      transition: all 0.18s ease;
+      cursor: pointer;
+      border: 2px solid #e5e7eb;
+    }
+    .opt-card:hover {
+      border-color: var(--blue);
+      background: #f0f7ff;
+      transform: translateX(4px);
+    }
+    .opt-card.selected {
+      border-color: var(--navy);
+      background: #e8f0fd;
+    }
+
+    /* Scale buttons */
+    .scale-btn {
+      width: 60px; height: 60px;
+      border: 2px solid #d1d5db;
+      border-radius: 50%;
+      font-size: 1.3rem;
+      font-weight: 700;
+      transition: all 0.18s ease;
+      cursor: pointer;
+    }
+    .scale-btn:hover {
+      border-color: var(--blue);
+      background: var(--blue);
+      color: white;
+      transform: scale(1.1);
+    }
+    .scale-btn.selected {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: var(--gold);
+    }
+
+    /* Multi checkbox */
+    .multi-card {
+      cursor: pointer;
+      border: 2px solid #e5e7eb;
+      transition: all 0.15s ease;
+    }
+    .multi-card:hover { border-color: var(--blue); background: #f0f7ff; }
+    .multi-card.checked { border-color: var(--navy); background: #e8f0fd; }
+
+    /* Continue button */
+    .btn-continue {
+      background: var(--navy);
+      color: white;
+      transition: all 0.2s ease;
+    }
+    .btn-continue:hover {
+      background: var(--blue);
+      transform: translateX(4px);
+    }
+
+    /* Textarea */
+    textarea:focus { outline: none; border-color: var(--blue); }
+
+    /* htmx indicator */
+    .htmx-indicator { display: none; }
+    .htmx-request .htmx-indicator { display: inline-block; }
+  </style>
+</head>
+<body class="min-h-screen" style="background: linear-gradient(135deg, #f8fafc 0%, #e8f0fd 100%);">
+
+  <!-- Header sticky -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+    <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+      <!-- Logo Walmart con Spark -->
+      <div class="flex items-center gap-2">
+        <svg width="30" height="30" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+          <g fill="#FFC220">
+            <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(0   30 30)"/>
+            <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(60  30 30)"/>
+            <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(120 30 30)"/>
+            <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(180 30 30)"/>
+            <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(240 30 30)"/>
+            <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(300 30 30)"/>
+          </g>
+        </svg>
+        <div>
+          <div class="text-navy font-extrabold text-sm leading-tight">Walmart Chile</div>
+          <div class="text-gray-400 text-xs">Programa PyME</div>
+        </div>
+      </div>
+      <!-- Progress counter -->
+      <div id="q-counter" class="text-sm text-gray-500 font-medium">
+        Pregunta <span id="q-num">1</span> de {{ total }}
+      </div>
+    </div>
+    <!-- Barra de progreso -->
+    <div class="h-1 bg-gray-100 w-full">
+      <div id="progress-bar" class="progress-fill h-full" style="width: {{ progress }}%"></div>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="pt-20 min-h-screen flex flex-col">
+    <!-- Bloque de pregunta (swap target) -->
+    <div id="question-wrap" class="flex-1 flex flex-col justify-center">
+      {% include 'question.html' %}
+    </div>
+  </main>
+
+  <script>
+    // Actualizar progress bar y contador via HTMX events
+    document.body.addEventListener('htmx:afterSwap', function(e) {
+      const bar = document.getElementById('progress-bar');
+      const num = document.getElementById('q-num');
+      const wrap = document.getElementById('question-wrap');
+      if (bar) {
+        const pct = wrap ? wrap.querySelector('[data-progress]')?.dataset.progress : 0;
+        if (pct !== undefined) bar.style.width = pct + '%';
+      }
+      const qn = wrap ? wrap.querySelector('[data-qnum]')?.dataset.qnum : null;
+      if (num && qn) num.textContent = qn;
+    });
+
+    // Funciones de navegacion definidas inline en question.html
+  </script>
+</body>
+</html>

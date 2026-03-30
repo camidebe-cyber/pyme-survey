@@ -1,0 +1,11 @@
+[project]
+name = "pyme-survey"
+version = "0.1.0"
+description = "Cuestionario PyME Walmart"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi",
+  "uvicorn",
+  "jinja2",
+  "python-multipart",
+]

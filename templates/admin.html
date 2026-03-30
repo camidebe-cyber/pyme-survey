@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel PyME • Walmart</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    * { font-family: 'Inter', sans-serif; }
+    :root { --navy:#002060; --blue:#017DFC; --cyan:#00B0F0; --gold:#FFC000; }
+    .stat-card { background:white; border-radius:14px; box-shadow:0 2px 10px rgba(0,32,96,.07); }
+    .badge-inter  { background:#fff3cd; color:#7a4f00; }
+    .badge-madura { background:#d4edda; color:#0d6938; }
+    .badge-prog   { background:#e8f0fd; color:var(--blue); }
+    .row-hover:hover { background:#f0f7ff; cursor:pointer; }
+    .tag { font-size:11px; font-weight:700; padding:2px 8px; border-radius:8px; }
+    input:focus { outline:none; border-color:var(--blue); }
+    .copy-btn { transition: all .2s; }
+    .copy-btn:hover { background:var(--navy); color:white; }
+    /* Modal reset */
+    #reset-modal { display:none; }
+    #reset-modal.show { display:flex; }
+  </style>
+</head>
+<body style="background:#f0f4ff; min-height:100vh;">
+
+<!-- Modal de confirmacion reset -->
+<div id="reset-modal" class="fixed inset-0 z-50 items-center justify-center"
+     style="background:rgba(0,0,0,.45)">
+  <div class="bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full mx-4">
+    <div class="text-3xl mb-3 text-center">&#9888;&#65039;</div>
+    <h3 class="text-lg font-extrabold text-center mb-2" style="color:var(--navy)">&#191;Reiniciar todos los datos?</h3>
+    <p class="text-sm text-gray-500 text-center mb-6">
+      Esto eliminará <strong>todas las sesiones y respuestas</strong> de la base de datos.
+      Esta acción no se puede deshacer.
+    </p>
+    <div class="flex gap-3">
+      <button onclick="document.getElementById('reset-modal').classList.remove('show')"
+              class="flex-1 py-3 rounded-xl font-bold border-2 border-gray-200 text-gray-500
+                     hover:border-gray-400 transition">
+        Cancelar
+      </button>
+      <form method="post" action="/resultados/reset" class="flex-1">
+        <button type="submit"
+                class="w-full py-3 rounded-xl font-bold text-white bg-red-500
+                       hover:bg-red-600 transition">
+          Sí, reiniciar
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="bg-white shadow-sm sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center gap-3">
+    <!-- Logo -->
+    <svg width="30" height="30" viewBox="0 0 60 60">
+      <g fill="#FFC220">
+        <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(0   30 30)"/>
+        <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(60  30 30)"/>
+        <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(120 30 30)"/>
+        <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(180 30 30)"/>
+        <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(240 30 30)"/>
+        <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(300 30 30)"/>
+      </g>
+    </svg>
+    <div>
+      <div class="font-bold text-sm" style="color:var(--navy)">Walmart Chile &bull; Programa PyME</div>
+      <div class="text-xs text-gray-400">Panel de Resultados</div>
+    </div>
+    <div class="ml-auto flex items-center gap-2">
+      <a href="/resultados/export/csv"
+         class="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold text-white transition hover:opacity-90"
+         style="background:var(--blue)">&#11015; Exportar CSV</a>
+      <button onclick="document.getElementById('reset-modal').classList.add('show')"
+              class="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold
+                     border-2 border-red-200 text-red-400 hover:bg-red-50 transition">
+        &#8635; Reiniciar
+      </button>
+      <a href="/" class="text-xs font-semibold px-3 py-2 rounded-xl border-2
+         border-gray-200 text-gray-500 hover:border-navy hover:text-navy transition">
+        📋 Original
+      </a>
+      <a href="/formulario" class="text-xs font-semibold px-3 py-2 rounded-xl border-2
+         bg-blue-50 hover:opacity-80 transition"
+         style="border-color:#0053e2; color:#0053e2">
+        ✨ Nuevo
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-6 py-8">
+
+  <!-- LINK PARA COMPARTIR -->
+  {% set net_icons  = {'hotspot': '&#128241;', 'lan': '&#127981;', 'local': '&#128274;', 'cloud': '&#9729;'} %}
+  {% set net_labels  = {
+      'hotspot': 'Hotspot móvil — accesible desde cualquier lugar',
+      'lan':     'Red Walmart — accesible desde la misma red',
+      'local':   'Solo local — conectate a WiFi o activa Hotspot',
+      'cloud':   'En la nube — accesible desde cualquier lugar del mundo'
+  } %}
+  {% set net_colors  = {'hotspot': '#2a8703', 'lan': '#017DFC', 'local': '#cc6600', 'cloud': '#6f42c1'} %}
+
+  <div class="bg-white rounded-2xl shadow-sm p-5 mb-7"
+       style="border-left:5px solid {{ net_colors[net_type] }}">
+    <div class="flex flex-col md:flex-row md:items-center gap-4">
+      <div class="flex items-center gap-3 shrink-0">
+        <span class="text-2xl">&#128279;</span>
+        <div>
+          <p class="font-bold text-sm" style="color:var(--navy)">Link para compartir con proveedores</p>
+          <p class="text-xs mt-0.5" style="color:{{ net_colors[net_type] }}">
+            {{ net_icons[net_type] }} {{ net_labels[net_type] }}
+          </p>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2 flex-1">
+        <!-- Link original -->
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold text-gray-400 w-24 shrink-0">Original</span>
+          <input id="survey-link" type="text" readonly
+                 value="{{ survey_url }}"
+                 class="flex-1 rounded-xl border-2 border-gray-200 px-3 py-2 text-sm
+                        font-mono text-gray-600 bg-gray-50 select-all cursor-pointer"
+                 onclick="this.select()">
+          <button onclick="copyLink('survey-link','copy-btn')"
+                  class="copy-btn px-4 py-2 rounded-xl text-sm font-bold border-2
+                         border-navy text-navy bg-white shrink-0"
+                  id="copy-btn">Copiar</button>
+        </div>
+        <!-- Link formulario alternativo -->
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold shrink-0 w-24" style="color:#0053e2">&#10024; Nuevo</span>
+          <input id="formulario-link" type="text" readonly
+                 value="{{ survey_url }}formulario"
+                 class="flex-1 rounded-xl border-2 px-3 py-2 text-sm
+                        font-mono text-gray-600 bg-blue-50 select-all cursor-pointer"
+                 style="border-color:#0053e2"
+                 onclick="this.select()">
+          <button onclick="copyLink('formulario-link','copy-btn-f')"
+                  class="copy-btn px-4 py-2 rounded-xl text-sm font-bold border-2
+                         bg-white shrink-0"
+                  style="border-color:#0053e2; color:#0053e2"
+                  id="copy-btn-f">Copiar</button>
+        </div>
+      </div>
+    </div>
+    {% if net_type == 'local' %}
+    <div class="mt-3 px-4 py-3 rounded-xl text-xs" style="background:#fff8e1; color:#7a4f00">
+      &#9888; El link solo funciona en <strong>tu PC</strong>.
+      Para compartir con otros: activa el <strong>Hotspot</strong> en tu celular,
+      conecta tu PC al hotspot y <strong>recarga esta página</strong>.
+    </div>
+    {% elif net_type == 'cloud' %}
+    <div class="mt-3 px-4 py-3 rounded-xl text-xs" style="background:#f3e8ff; color:#6f42c1">
+      &#9729; App en la nube — el link funciona desde <strong>cualquier lugar del mundo</strong>.
+    </div>
+    {% elif net_type == 'lan' %}
+    <div class="mt-3 px-4 py-3 rounded-xl text-xs" style="background:#e8f0fd; color:#002060">
+      &#127981; Este link funciona dentro de la <strong>red Walmart</strong>.
+      Si necesitas enviarlo a PyMEs externas: activa el <strong>Hotspot</strong> en tu celular,
+      conecta tu PC y <strong>recarga esta página</strong> para obtener el link externo.
+    </div>
+    {% else %}
+    <div class="mt-3 px-4 py-3 rounded-xl text-xs" style="background:#f0fff4; color:#0d6938">
+      &#128241; Hotspot activo — este link funciona desde <strong>cualquier dispositivo</strong>
+      conectado al hotspot de tu celular.
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Stats cards -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div class="stat-card p-5">
+      <div class="text-xs font-semibold uppercase text-gray-400 mb-1">Total iniciadas</div>
+      <div class="text-4xl font-extrabold" style="color:var(--navy)">{{ stats.total }}</div>
+      <div class="text-xs text-gray-400 mt-1">{{ stats.en_progreso }} en progreso</div>
+    </div>
+    <div class="stat-card p-5">
+      <div class="text-xs font-semibold uppercase text-gray-400 mb-1">Completadas</div>
+      <div class="text-4xl font-extrabold" style="color:var(--blue)">{{ stats.completadas }}</div>
+      <div class="text-xs text-gray-400 mt-1">de {{ stats.total }} iniciadas</div>
+    </div>
+    <div class="stat-card p-5 border-l-4" style="border-left-color:var(--gold)">
+      <div class="text-xs font-semibold uppercase text-gray-400 mb-1">&#128640; PyME Madura</div>
+      <div class="text-4xl font-extrabold" style="color:var(--navy)">{{ stats.maduras }}</div>
+      <div class="text-xs text-gray-400 mt-1">{{ stats.pct_mad }}% del total</div>
+    </div>
+    <div class="stat-card p-5 border-l-4" style="border-left-color:var(--cyan)">
+      <div class="text-xs font-semibold uppercase text-gray-400 mb-1">&#9889; En Desarrollo</div>
+      <div class="text-4xl font-extrabold" style="color:var(--navy)">{{ stats.intermedias }}</div>
+      <div class="text-xs text-gray-400 mt-1">{{ stats.pct_inter }}% &bull; Prom. {{ stats.avg_score }}%</div>
+    </div>
+  </div>
+
+  <!-- Buscador -->
+  <div class="flex items-center gap-3 mb-4">
+    <form method="get" action="/resultados" class="flex gap-2 flex-1">
+      <input type="text" name="q" value="{{ q }}"
+             placeholder="Buscar por RUT, Razón Social o Email..."
+             class="flex-1 border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm transition-colors"
+             style="color:var(--navy)">
+      <button type="submit" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white"
+              style="background:var(--navy)">Buscar</button>
+      {% if q %}
+      <a href="/resultados" class="px-4 py-2.5 rounded-xl text-sm font-semibold
+         border-2 border-gray-200 text-gray-500 hover:text-navy transition">&#10005;</a>
+      {% endif %}
+    </form>
+    <span class="text-xs text-gray-400">{{ rows|length }} resultado{{ 's' if rows|length != 1 else '' }}</span>
+  </div>
+
+  <!-- Tabla -->
+  <div class="bg-white rounded-2xl shadow-sm overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="text-left text-xs font-bold uppercase text-gray-400"
+            style="background:#f8fafc; border-bottom:2px solid #e5e7eb">
+          <th class="px-4 py-3">RUT</th>
+          <th class="px-4 py-3">Razón Social</th>
+          <th class="px-4 py-3">Email</th>
+          <th class="px-4 py-3">Segmento</th>
+          <th class="px-4 py-3">Score</th>
+          <th class="px-4 py-3">Estado</th>
+          <th class="px-4 py-3">Fecha</th>
+          <th class="px-4 py-3"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        {% for r in rows %}
+        <tr class="row-hover transition-colors" onclick="window.open('/resultados/{{ r.id }}','_blank')">
+          <td class="px-4 py-3 font-mono text-xs text-gray-600">{{ r.rut or '—' }}</td>
+          <td class="px-4 py-3 font-semibold" style="color:var(--navy)">
+            {{ r.razon_social or 'Sin nombre' }}
+          </td>
+          <td class="px-4 py-3 text-xs text-gray-500">
+            {% if r.email %}
+            <a href="mailto:{{ r.email }}" onclick="event.stopPropagation()"
+               class="underline hover:text-blue-600">{{ r.email }}</a>
+            {% else %}&mdash;{% endif %}
+          </td>
+          <td class="px-4 py-3">
+            {% if r.completed %}
+              <span class="tag {{ 'badge-madura' if r.segment == 'madura' else 'badge-inter' }}">
+                {{ r.segment_label }}
+              </span>
+            {% else %}
+              <span class="tag badge-prog">En progreso</span>
+            {% endif %}
+          </td>
+          <td class="px-4 py-3">
+            {% if r.completed %}
+            <div class="flex items-center gap-2">
+              <div class="w-16 h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full rounded-full"
+                     style="width:{{ r.pct }}%;
+                            background:{% if r.pct >= 60 %}var(--blue){% else %}var(--gold){% endif %}"></div>
+              </div>
+              <span class="font-bold text-xs" style="color:var(--navy)">{{ r.pct }}%</span>
+            </div>
+            {% else %}
+            <span class="text-gray-300 text-xs">—</span>
+            {% endif %}
+          </td>
+          <td class="px-4 py-3">
+            {% if r.completed %}
+              <span class="w-2 h-2 rounded-full inline-block mr-1" style="background:#2a8703"></span>
+              <span class="text-xs text-gray-500">Completa</span>
+            {% else %}
+              <span class="w-2 h-2 rounded-full inline-block mr-1" style="background:var(--gold)"></span>
+              <span class="text-xs text-gray-400">Parcial</span>
+            {% endif %}
+          </td>
+          <td class="px-4 py-3 text-xs text-gray-400">{{ r.created_at[:10] if r.created_at else '—' }}</td>
+          <td class="px-4 py-3">
+            <span class="text-xs font-semibold" style="color:var(--blue)">Ver &#8594;</span>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="8" class="px-4 py-16 text-center text-gray-300">
+            <div class="text-4xl mb-3">&#128202;</div>
+            <p>No hay respuestas aún.</p>
+            <p class="text-xs mt-1">Comparte el link de arriba con tus proveedores para comenzar.</p>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <p class="text-center text-xs text-gray-300 mt-5">
+    Haz clic en cualquier fila para el detalle &bull;
+    <a href="/resultados/export/csv" class="underline" style="color:var(--blue)">Descargar CSV completo</a>
+  </p>
+</main>
+
+<script>
+function copyLink(inputId, btnId) {
+  const input = document.getElementById(inputId);
+  const btn   = document.getElementById(btnId);
+  const orig  = btn.textContent;
+  const origBg = btn.style.background;
+  const origColor = btn.style.color;
+  const done = () => {
+    btn.textContent      = '\u2713 Copiado!';
+    btn.style.background = '#001e60';
+    btn.style.color      = 'white';
+    setTimeout(() => {
+      btn.textContent      = orig;
+      btn.style.background = origBg;
+      btn.style.color      = origColor;
+    }, 2500);
+  };
+  navigator.clipboard.writeText(input.value).then(done).catch(() => {
+    input.select();
+    document.execCommand('copy');
+    done();
+  });
+}
+</script>
+</body>
+</html>

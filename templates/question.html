@@ -1,0 +1,323 @@
+{% set qnum = q_index + 1 %}
+{% set sa = saved_answer %}
+{% set sa_base = sa.split('|||')[0] if '|||' in sa else sa %}
+{% set sa_extra = sa.split('|||')[1] if '|||' in sa else '' %}
+{% set can_go_back = q_index > 0 %}
+
+<div class="slide-up max-w-2xl mx-auto w-full px-4 py-10"
+     data-progress="{{ progress }}" data-qnum="{{ qnum }}">
+
+  <!-- Bloque badge -->
+  <div class="mb-6 flex items-center gap-2">
+    <span class="text-lg">{{ block_emoji }}</span>
+    <span class="text-xs font-semibold uppercase tracking-widest text-gray-400"
+          style="letter-spacing:.12em">{{ block_label }}</span>
+    {% if company %}
+      <span class="ml-auto text-xs text-gray-400">Hola, <strong class="text-navy">{{ company }}</strong> &#128075;</span>
+    {% endif %}
+  </div>
+
+  <!-- Numero + Pregunta -->
+  <div class="mb-2 flex items-start gap-3">
+    <span class="text-4xl mt-1">{{ q.emoji }}</span>
+    <div>
+      <p class="text-[11px] text-gray-400 font-semibold uppercase mb-1">{{ qnum }} / {{ total }}</p>
+      <h2 class="text-2xl md:text-3xl font-bold text-navy leading-snug">{{ q.text }}</h2>
+      {% if q.subtitle %}
+        <p class="mt-2 text-gray-500 text-sm">{{ q.subtitle }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Separador gold -->
+  <div class="h-[3px] w-16 rounded-full mt-5 mb-7" style="background:var(--gold)"></div>
+
+
+  {# ================================================================
+     CHOICE / BOOL
+  ================================================================ #}
+  {% if q.type in ['choice', 'bool'] %}
+  <form id="qform_{{ q.id }}" method="post" action="/answer"
+        hx-post="/answer" hx-target="#question-wrap" hx-swap="innerHTML">
+    <input type="hidden" name="session_id" value="{{ session_id }}">
+    <input type="hidden" name="q_index"    value="{{ q_index }}">
+    <input type="hidden" name="answer" id="answer_{{ q.id }}" value="{{ sa_base }}">
+
+    <div class="flex flex-col gap-3">
+      {% for opt in q.options %}
+      {% set is_sel = (opt.value == sa_base) %}
+      <label class="opt-card rounded-xl px-5 py-4 flex items-center gap-4 bg-white select-none
+                    {{ 'selected' if is_sel else '' }}"
+             onclick="handleChoice(
+               'qform_{{ q.id }}',
+               'answer_{{ q.id }}',
+               '{{ opt.value }}',
+               {{ 'true' if opt.get('has_text_followup') else 'false' }},
+               'followup_{{ q.id }}'
+             )">
+        <input type="radio" name="_r" value="{{ opt.value }}" class="sr-only"
+               {{ 'checked' if is_sel else '' }}>
+        {% if opt.icon %}<span class="text-2xl w-8 text-center shrink-0">{{ opt.icon }}</span>{% endif %}
+        <span class="font-medium text-gray-800 text-base">{{ opt.label }}</span>
+        <span class="ml-auto text-gray-300 text-lg">&#8594;</span>
+      </label>
+      {% endfor %}
+    </div>
+
+    <!-- Followup (solo para opciones con has_text_followup) -->
+    <div id="followup_{{ q.id }}" class="{{ '' if sa_extra else 'hidden' }} mt-4">
+      <div class="relative">
+        <input type="text" id="followup_input_{{ q.id }}"
+               maxlength="30" value="{{ sa_extra }}"
+               placeholder="{% for opt in q.options %}{% if opt.get('has_text_followup') %}{{ opt.get('followup_placeholder','Especifica cual...') }}{% endif %}{% endfor %}"
+               class="w-full border-b-2 border-gray-300 bg-transparent text-lg font-semibold
+                      text-navy py-3 px-1 outline-none transition-colors
+                      placeholder-gray-300"
+               style="border-bottom-color:var(--blue)"
+               oninput="updateCharCount('{{ q.id }}',this.value)"
+               onkeydown="if(event.key==='Enter'){event.preventDefault();
+                 submitWithFollowup('qform_{{ q.id }}','answer_{{ q.id }}','followup_input_{{ q.id }}');}">
+        <div class="flex justify-between items-center mt-2">
+          <span class="text-xs text-gray-400">M&#225;ximo 30 caracteres</span>
+          <span id="char_count_{{ q.id }}" class="text-xs font-bold text-gray-400">
+            {{ sa_extra|length }} / 30
+          </span>
+        </div>
+      </div>
+      <button type="button"
+              onclick="submitWithFollowup('qform_{{ q.id }}','answer_{{ q.id }}','followup_input_{{ q.id }}')"
+              class="btn-continue mt-5 px-8 py-3 rounded-xl font-bold text-base flex items-center gap-2">
+        Continuar &#8594;
+      </button>
+    </div>
+
+    <div class="htmx-request mt-4 text-center text-sm text-gray-400">
+      <span class="htmx-indicator">&#9203; Cargando...</span>
+    </div>
+  </form>
+
+  <script>
+  function handleChoice(formId, answerId, value, hasFollowup, followupDivId) {
+    document.querySelectorAll('#'+formId+' .opt-card').forEach(c=>c.classList.remove('selected'));
+    event.currentTarget.classList.add('selected');
+    if (hasFollowup) {
+      document.getElementById(answerId).value = value;
+      const div = document.getElementById(followupDivId);
+      div.classList.remove('hidden');
+      div.style.animation = 'slideUp 0.3s ease both';
+      setTimeout(()=>{ const inp=document.getElementById('followup_input_'+answerId.replace('answer_','')); if(inp)inp.focus(); },80);
+    } else {
+      document.getElementById(followupDivId).classList.add('hidden');
+      document.getElementById(answerId).value = value;
+      setTimeout(()=>{ htmx.trigger(document.getElementById(formId),'submit'); },200);
+    }
+  }
+  function updateCharCount(qid,text){
+    const c=document.getElementById('char_count_'+qid);
+    if(c){const l=text.length;c.textContent=l+' / 30';c.style.color=l>=28?'#cc6600':l>=20?'#017DFC':'#9ca3af';}
+  }
+  function submitWithFollowup(formId,answerId,inputId){
+    const base=document.getElementById(answerId).value;
+    const extra=document.getElementById(inputId).value.trim();
+    document.getElementById(answerId).value=extra?base+'|||'+extra:base;
+    htmx.trigger(document.getElementById(formId),'submit');
+  }
+  </script>
+  {% endif %}
+
+
+  {# ================================================================
+     SCALE
+  ================================================================ #}
+  {% if q.type == 'scale' %}
+  <form id="qform_{{ q.id }}" method="post" action="/answer"
+        hx-post="/answer" hx-target="#question-wrap" hx-swap="innerHTML">
+    <input type="hidden" name="session_id" value="{{ session_id }}">
+    <input type="hidden" name="q_index"    value="{{ q_index }}">
+    <div class="flex gap-4 items-center justify-center flex-wrap mt-2">
+      {% for opt in q.options %}
+      {% set is_sel = (opt.value == sa) %}
+      <label class="flex flex-col items-center gap-2 cursor-pointer">
+        <div class="scale-btn flex items-center justify-center {{ 'selected' if is_sel else '' }}"
+             onclick="this.closest('form').querySelector('input[value=\'{{ opt.value }}\']').checked=true;
+                      document.querySelectorAll('.scale-btn').forEach(b=>b.classList.remove('selected'));
+                      this.classList.add('selected');
+                      setTimeout(()=>this.closest('form').requestSubmit(),200);">
+          {{ opt.label }}
+        </div>
+        <input type="radio" name="answer" value="{{ opt.value }}" class="sr-only"
+               {{ 'checked' if is_sel else '' }}>
+      </label>
+      {% endfor %}
+    </div>
+    <div class="flex justify-between text-xs text-gray-400 mt-4 px-2">
+      <span>Canal secundario</span><span>Mi canal principal</span>
+    </div>
+  </form>
+  {% endif %}
+
+
+  {# ================================================================
+     TEXT
+  ================================================================ #}
+  {% if q.type == 'text' %}
+  <form id="qform_{{ q.id }}" method="post" action="/answer"
+        hx-post="/answer" hx-target="#question-wrap" hx-swap="innerHTML">
+    <input type="hidden" name="session_id" value="{{ session_id }}">
+    <input type="hidden" name="q_index"    value="{{ q_index }}">
+    <div class="relative">
+      <input type="text" name="answer" value="{{ sa }}"
+             placeholder="{{ q.placeholder or '' }}"
+             autocomplete="organization"
+             class="w-full border-b-2 border-gray-300 bg-transparent text-xl font-semibold text-navy
+                    py-3 px-1 outline-none transition-colors placeholder-gray-300"
+             style="border-bottom-color:var(--blue)"
+             onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('qform_{{ q.id }}').requestSubmit();}"
+             autofocus>
+    </div>
+    <button type="submit"
+            class="btn-continue mt-8 px-8 py-3 rounded-xl font-bold text-base flex items-center gap-2">
+      Continuar &#8594;
+    </button>
+  </form>
+  {% endif %}
+
+
+  {# ================================================================
+     MULTI (checkbox cards)
+  ================================================================ #}
+  {% if q.type == 'multi' %}
+  {% set saved_vals = sa.split(',') if sa and sa != 'ninguno' else [] %}
+  <form id="multiform_{{ q.id }}" method="post" action="/answer"
+        hx-post="/answer" hx-target="#question-wrap" hx-swap="innerHTML">
+    <input type="hidden" name="session_id" value="{{ session_id }}">
+    <input type="hidden" name="q_index"    value="{{ q_index }}">
+    <input type="hidden" name="answer" id="multi_answer_{{ q.id }}" value="{{ sa }}">
+    <div class="grid grid-cols-2 gap-3">
+      {% for opt in q.options %}
+      {% set is_chk = opt.value in saved_vals %}
+      <div class="multi-card rounded-xl px-4 py-3 bg-white flex items-center gap-3
+                  {{ 'checked' if is_chk else '' }}"
+           onclick="toggleMulti(this)">
+        <input type="checkbox" value="{{ opt.value }}" class="sr-only"
+               {{ 'checked' if is_chk else '' }}>
+        <span class="text-xl">{{ opt.icon }}</span>
+        <span class="text-sm font-medium text-gray-800">{{ opt.label }}</span>
+        <span class="ml-auto opt-check" style="color:{{ 'var(--navy)' if is_chk else '' }}">{{ '&#10003;' if is_chk else '&#9633;' }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    <button type="button" onclick="submitMulti('multiform_{{ q.id }}')"
+            class="btn-continue mt-6 px-8 py-3 rounded-xl font-bold text-base flex items-center gap-2">
+      Continuar &#8594;
+    </button>
+  </form>
+  <script>
+  function toggleMulti(el){
+    el.classList.toggle('checked');
+    const cb=el.querySelector('input[type=checkbox]');
+    const icon=el.querySelector('.opt-check');
+    cb.checked=!cb.checked;
+    icon.innerHTML=cb.checked?'&#10003;':'&#9633;';
+    icon.style.color=cb.checked?'var(--navy)':'';
+  }
+  function submitMulti(formId){
+    const form=document.getElementById(formId);
+    const vals=[...form.querySelectorAll('input[type=checkbox]:checked')].map(c=>c.value).join(',');
+    form.querySelector('input[name=answer]').value=vals||'ninguno';
+    htmx.trigger(form,'submit');
+  }
+  </script>
+  {% endif %}
+
+
+  {# ================================================================
+     TEXTAREA
+  ================================================================ #}
+  {% if q.type == 'textarea' %}
+  <form id="qform_{{ q.id }}" method="post" action="/answer"
+        hx-post="/answer" hx-target="#question-wrap" hx-swap="innerHTML">
+    <input type="hidden" name="session_id" value="{{ session_id }}">
+    <input type="hidden" name="q_index"    value="{{ q_index }}">
+    <textarea name="answer" rows="5" autofocus
+              placeholder="{{ q.placeholder or 'Escribe aqui...' }}"
+              class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-base text-navy
+                     resize-none bg-white shadow-sm placeholder-gray-300 outline-none
+                     transition-colors focus:border-blue-400">{{ sa }}</textarea>
+    <div class="flex gap-3 mt-4">
+      <button type="submit"
+              class="btn-continue px-8 py-3 rounded-xl font-bold text-base flex items-center gap-2">
+        Ver mis resultados &#8594;
+      </button>
+      <button type="button"
+              onclick="document.querySelector('textarea[name=answer]').value='';
+                       document.getElementById('qform_{{ q.id }}').requestSubmit();"
+              class="px-6 py-3 rounded-xl font-medium text-gray-400 border-2 border-gray-200
+                     hover:border-gray-400 hover:text-gray-600 transition-colors text-sm">
+        Omitir
+      </button>
+    </div>
+  </form>
+  {% endif %}
+
+
+  {# ================================================================
+     BARRA DE NAVEGACION (Anterior / Continuar)
+  ================================================================ #}
+  <div class="mt-10 flex items-center justify-between">
+
+    <!-- Boton Anterior -->
+    {% if can_go_back %}
+    <button type="button"
+            onclick="goBack('{{ session_id }}', {{ q_index }})"
+            class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold
+                   border-2 border-gray-200 text-gray-500 bg-white
+                   hover:border-navy hover:text-navy transition-all">
+      &#8592; Anterior
+    </button>
+    {% else %}
+    <div></div>
+    {% endif %}
+
+    <!-- Hint central -->
+    <p class="text-xs text-gray-300">Presiona Enter o haz clic para continuar</p>
+
+    <!-- Espacio derecho -->
+    <div class="w-28"></div>
+  </div>
+
+  <!-- Formulario oculto para retroceder -->
+  <form id="back-form" method="post" action="/prev"
+        hx-post="/prev" hx-target="#question-wrap" hx-swap="innerHTML"
+        style="display:none">
+    <input type="hidden" name="session_id" value="{{ session_id }}">
+    <input type="hidden" name="q_index"    value="{{ q_index }}">
+    <input type="hidden" name="answer"     id="back-answer" value="">
+  </form>
+
+  <script>
+  function getCurrentAnswer() {
+    // choice/bool -> hidden input
+    const h = document.querySelector('[id^="answer_"]');
+    if (h && h.value) return h.value;
+    // scale -> radio checked
+    const r = document.querySelector('input[name="answer"]:checked');
+    if (r) return r.value;
+    // text -> text input
+    const t = document.querySelector('input[name="answer"][type="text"]');
+    if (t) return t.value;
+    // multi -> hidden multi_answer
+    const m = document.querySelector('[id^="multi_answer_"]');
+    if (m) return m.value;
+    // textarea
+    const ta = document.querySelector('textarea[name="answer"]');
+    if (ta) return ta.value;
+    return '';
+  }
+  function goBack(sessionId, qIndex) {
+    document.getElementById('back-answer').value = getCurrentAnswer();
+    htmx.trigger(document.getElementById('back-form'), 'submit');
+  }
+  </script>
+
+</div>
