@@ -6,7 +6,6 @@ import csv
 import io
 import os
 import socket
-import sqlite3
 from datetime import datetime
 from pathlib import Path
 
@@ -18,11 +17,10 @@ from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
 
+from db import get_conn
 from questions import QUESTIONS, AREA_LABELS, compute_result
 
-PORT    = int(os.environ.get("PORT", 8777))
-_data   = Path(os.environ.get("DATA_DIR", str(Path(__file__).parent)))
-DB_PATH = _data / "survey.db"
+PORT = int(os.environ.get("PORT", 8777))
 
 
 def get_local_ip() -> str:
@@ -72,7 +70,6 @@ def get_survey_url() -> tuple[str, str]:
         tipo = "lan"
     return url, tipo
 
-DB_PATH   = Path(__file__).parent / "survey.db"
 TEMPL     = Path(__file__).parent / "templates"
 router    = APIRouter()
 templates = Jinja2Templates(directory=TEMPL)
@@ -80,21 +77,16 @@ templates = Jinja2Templates(directory=TEMPL)
 Q_MAP = {str(q["id"]): q for q in QUESTIONS}
 
 
-def get_db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
-
-
 def _all_sessions() -> list[dict]:
-    with get_db() as conn:
-        sessions = conn.execute(
-            """SELECT id, rut, razon_social, email, created_at, completed
-               FROM sessions ORDER BY created_at DESC"""
-        ).fetchall()
-        all_answers = conn.execute(
-            "SELECT session_id, question_id, answer FROM answers"
-        ).fetchall()
+    with get_conn() as conn:
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT id, rut, razon_social, email, created_at, completed "
+            "FROM sessions ORDER BY created_at DESC"
+        )
+        sessions = cur.fetchall()
+        cur.execute("SELECT session_id, question_id, answer FROM answers")
+        all_answers = cur.fetchall()
 
     ans_map: dict[str, dict] = {}
     for a in all_answers:
@@ -110,7 +102,7 @@ def _all_sessions() -> list[dict]:
             "rut":          s["rut"]          or "",
             "razon_social": s["razon_social"] or "",
             "email":        s["email"]        or "",
-            "created_at":   s["created_at"]   or "",
+            "created_at":   str(s["created_at"]) if s["created_at"] else "",
             "completed":    bool(s["completed"]),
             "answers":      answers,
             **result,
@@ -139,9 +131,10 @@ def _stats(rows: list[dict]) -> dict:
 @router.post("/resultados/reset")
 async def reset_data():
     """Borra TODOS los datos. Solo para uso interno/testing."""
-    with get_db() as conn:
-        conn.execute("DELETE FROM answers")
-        conn.execute("DELETE FROM sessions")
+    with get_conn() as conn:
+        cur = conn.cursor()
+        cur.execute("DELETE FROM answers")
+        cur.execute("DELETE FROM sessions")
     return RedirectResponse(url="/resultados", status_code=303)
 
 
