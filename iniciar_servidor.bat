@@ -68,8 +68,8 @@ echo.
 echo  Iniciando servidor...
 echo.
 
-:: Iniciar uvicorn en background
-start /min "" cmd /c "cd /d "%~dp0" && .venv\Scripts\python -m uvicorn main:app --host 0.0.0.0 --port 8777"
+:: Iniciar uvicorn en background (con URL publica Render)
+start /min "" cmd /c "cd /d "%~dp0" && set PUBLIC_URL=https://pyme-survey.onrender.com && .venv\Scripts\python -m uvicorn main:app --host 0.0.0.0 --port 8777"
 
 :: Esperar que arranque
 timeout /t 3 /nobreak > nul
