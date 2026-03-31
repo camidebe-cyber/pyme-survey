@@ -159,7 +159,7 @@ QUESTIONS = [
         "id": 11, "block": "ecosistema", "type": "choice",
         "emoji": "🔗",
         "text": "¿Conoces y usas Phronesis?",
-        "subtitle": "Plataforma de Walmart para gestión de espacio y exhibición en tienda",
+        "subtitle": "Phronesis es una plataforma de datos e insights donde se integran datos transaccionales y de comportamiento del cliente",
         "options": [
             {"value": "no",   "label": "No, nunca he escuchado ese nombre",            "icon": "🤔"},
             {"value": "oido", "label": "Sí, lo conozco pero no lo uso",                "icon": "👂"},
@@ -229,7 +229,7 @@ QUESTIONS = [
         "id": 16, "block": "comercial", "type": "choice",
         "emoji": "🗺️",
         "text": "¿Conoces el proceso de alzas de costo en Walmart?",
-        "subtitle": "Solicitud formal para actualizar precios de costo con tu comprador",
+        "subtitle": "Solicitud formal para ejecutar alzas de costos.",
         "options": [
             {"value": "no",           "label": "No, no conozco el proceso",                            "icon": "❓"},
             {"value": "referencia",   "label": "He escuchado del proceso pero no lo conozco en detalle", "icon": "👂"},
@@ -256,16 +256,16 @@ QUESTIONS = [
     # ─ BLOQUE 4: Negocio & Datos ─────────────────────────────
     {
         "id": 18, "block": "negocio", "type": "choice",
-        "emoji": "📊",
-        "text": "¿Qué % de tus ventas totales representa Walmart?",
-        "subtitle": "",
+        "emoji": "🏷️",
+        "text": "¿Conoces el Programa de Marca Propia de Walmart?",
+        "subtitle": "Walmart desarrolla productos bajo su propia marca con proveedores seleccionados",
         "options": [
-            {"value": "menos20", "label": "Menos del 20%",      "icon": "🌱"},
-            {"value": "20a50",   "label": "Entre 20% y 50%",   "icon": "📈"},
-            {"value": "50a80",   "label": "Entre 50% y 80%",   "icon": "🏆"},
-            {"value": "mas80",   "label": "Más del 80%",       "icon": "🎯"},
+            {"value": "no",         "label": "No, no lo conozco",                                    "icon": "🤔"},
+            {"value": "referencia", "label": "Sí, he escuchado de él pero no sé cómo funciona",     "icon": "👂"},
+            {"value": "conoce",     "label": "Sí, lo conozco y me interesa participar",              "icon": "💡"},
+            {"value": "participa",  "label": "Sí, ya participo o he participado en él",              "icon": "✅"},
         ],
-        "score_map": {},
+        "score_map": {"no": 0, "referencia": 1, "conoce": 1, "participa": 2},
     },
     {
         "id": 19, "block": "negocio", "type": "choice",
@@ -273,18 +273,25 @@ QUESTIONS = [
         "text": "¿Quién es el representante de tu cuenta en Walmart?",
         "subtitle": "Ej: KAM (Key Account Manager)",
         "options": [
-            {"value": "no",       "label": "No sé quién es mi KAM o representante",         "icon": "❓"},
-            {"value": "parcial",  "label": "Sé quién es pero no tenemos contacto frecuente", "icon": "⏰"},
+            {"value": "yo",      "label": "Soy yo quien administra la cuenta",              "icon": "😅"},
             {
-                "value": "activo",
-                "label": "Sí, tengo una relación activa con mi KAM",
+                "value": "kam",
+                "label": "Tengo KAM especializado para la cuenta",
                 "icon": "✅",
                 "has_text_followup": True,
-                "followup_placeholder": "Mail del KAM (opcional)",
+                "followup_placeholder": "Email del KAM (opcional)",
+                "followup_maxlength": 80,
+            },
+            {
+                "value": "conocido",
+                "label": "Tengo un conocido para la cuenta",
+                "icon": "🤝",
+                "has_text_followup": True,
+                "followup_placeholder": "Email de contacto (opcional)",
                 "followup_maxlength": 80,
             },
         ],
-        "score_map": {"no": 0, "parcial": 1, "activo": 2},
+        "score_map": {"yo": 0, "kam": 2, "conocido": 1},
         "tag": "compradores",
     },
 
@@ -332,7 +339,7 @@ QUESTIONS = [
         "id": 23, "block": "operacional", "type": "choice",
         "emoji": "📦",
         "text": "¿Sabes qué es el Fee de Última Milla y por qué se te cobra?",
-        "subtitle": "Cargo asociado a la distribución desde el CD hasta la tienda (es el % de venta de ecommerce)",
+        "subtitle": "Es el % de venta de ecommerce",
         "options": [
             {"value": "no",       "label": "No, no sé qué es",                           "icon": "❌"},
             {"value": "concepto", "label": "Sí, lo conozco pero no entiendo bien por qué", "icon": "⚠️"},
