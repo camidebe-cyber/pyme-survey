@@ -71,9 +71,18 @@
       <div class="text-xs text-gray-400">Panel de Resultados</div>
     </div>
     <div class="ml-auto flex items-center gap-2">
-      <a href="/resultados/export/csv"
+      <!-- Excel Completo -->
+      <a href="/resultados/export/excel"
          class="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold text-white transition hover:opacity-90"
-         style="background:var(--blue)">&#11015; Exportar CSV</a>
+         style="background:#217346" title="Excel con todas las respuestas">
+         &#11015; Excel Completo
+      </a>
+      <!-- Excel Contactos -->
+      <a href="/resultados/export/contactos"
+         class="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold text-white transition hover:opacity-90"
+         style="background:#FFC220; color:#002060" title="Solo RUT, Razón Social y Email">
+         &#11015; Contactos
+      </a>
       <button onclick="document.getElementById('reset-modal').classList.add('show')"
               class="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold
                      border-2 border-red-200 text-red-400 hover:bg-red-50 transition">
