@@ -1,13 +1,11 @@
 services:
   - type: web
-    name: pyme-survey-walmart
+    name: pyme-survey
     runtime: python
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.0
-    disk:
-      name: pyme-data
-      mountPath: /data
-      sizeGB: 1
+        value: "3.11.0"
+      - key: PUBLIC_URL
+        value: https://pyme-survey.onrender.com
