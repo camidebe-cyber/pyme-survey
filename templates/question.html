@@ -7,15 +7,14 @@
 <div class="slide-up max-w-2xl mx-auto w-full px-4 py-10"
      data-progress="{{ progress }}" data-qnum="{{ qnum }}">
 
-  <!-- Bloque badge -->
+  <!-- Saludo empresa -->
+  {% if company %}
   <div class="mb-6 flex items-center gap-2">
-    <span class="text-lg">{{ block_emoji }}</span>
-    <span class="text-xs font-semibold uppercase tracking-widest text-gray-400"
-          style="letter-spacing:.12em">{{ block_label }}</span>
-    {% if company %}
-      <span class="ml-auto text-xs text-gray-400">Hola, <strong class="text-navy">{{ company }}</strong> &#128075;</span>
-    {% endif %}
+    <span class="ml-auto text-xs text-gray-400">Hola, <strong class="text-navy">{{ company }}</strong> &#128075;</span>
   </div>
+  {% else %}
+  <div class="mb-6"></div>
+  {% endif %}
 
   <!-- Numero + Pregunta -->
   <div class="mb-2 flex items-start gap-3">
