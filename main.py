@@ -119,7 +119,7 @@ async def answer(
                 <p style='margin-top:1rem'>
                   <a href='/' style='color:#002060;font-weight:bold'>&#8592; Volver al inicio</a>
                 </p></div>""",
-            status_code=500
+            status_code=200
         )
 
 
@@ -149,5 +149,5 @@ async def prev(
                 <p style='margin-top:1rem'>
                   <a href='/' style='color:#002060;font-weight:bold'>&#8592; Volver al inicio</a>
                 </p></div>""",
-            status_code=500
+            status_code=200
         )
