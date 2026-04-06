@@ -88,16 +88,11 @@
                      border-2 border-red-200 text-red-400 hover:bg-red-50 transition">
         &#8635; Reiniciar
       </button>
-      <a href="{{ survey_url }}" target="_blank"
-         class="text-xs font-semibold px-3 py-2 rounded-xl border-2
-         border-gray-200 text-gray-500 hover:border-navy hover:text-navy transition">
-        📋 Original ↗
-      </a>
       <a href="{{ survey_url }}formulario" target="_blank"
          class="text-xs font-semibold px-3 py-2 rounded-xl border-2
          bg-blue-50 hover:opacity-80 transition"
          style="border-color:#0053e2; color:#0053e2">
-        ✨ Nuevo ↗
+        📋 Abrir Formulario ↗
       </a>
     </div>
   </div>
@@ -128,25 +123,7 @@
         </div>
       </div>
       <div class="flex flex-col gap-2 flex-1">
-        <!-- Link original -->
         <div class="flex items-center gap-2">
-          <span class="text-xs font-bold text-gray-400 w-24 shrink-0">Original</span>
-          <input id="survey-link" type="text" readonly
-                 value="{{ survey_url }}"
-                 class="flex-1 rounded-xl border-2 border-gray-200 px-3 py-2 text-sm
-                        font-mono text-gray-600 bg-gray-50 select-all cursor-pointer"
-                 onclick="this.select()">
-          <a href="{{ survey_url }}" target="_blank"
-             class="px-3 py-2 rounded-xl text-sm font-bold border-2 border-gray-200
-                    text-gray-500 bg-white hover:bg-gray-50 shrink-0 transition">&#8599;</a>
-          <button onclick="copyLink('survey-link','copy-btn')"
-                  class="copy-btn px-4 py-2 rounded-xl text-sm font-bold border-2
-                         border-navy text-navy bg-white shrink-0"
-                  id="copy-btn">Copiar</button>
-        </div>
-        <!-- Link formulario alternativo -->
-        <div class="flex items-center gap-2">
-          <span class="text-xs font-bold shrink-0 w-24" style="color:#0053e2">&#10024; Nuevo</span>
           <input id="formulario-link" type="text" readonly
                  value="{{ survey_url }}formulario"
                  class="flex-1 rounded-xl border-2 px-3 py-2 text-sm
@@ -162,6 +139,7 @@
                   style="border-color:#0053e2; color:#0053e2"
                   id="copy-btn-f">Copiar</button>
         </div>
+      </div>
       </div>
     </div>
     {% if net_type == 'local' %}
