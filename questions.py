@@ -202,7 +202,7 @@ QUESTIONS = [
     {
         "id": 14, "block": "comercial", "type": "choice",
         "emoji": "📰",
-        "text": "¿Tienes información de en qué locales están tus productos?",
+        "text": "¿Sabes en qué locales están presentes tus productos?",
         "subtitle": "Presencia y disponibilidad de tu producto por tienda Walmart",
         "options": [
             {"value": "no",         "label": "No, no sé en qué tiendas estoy",                       "icon": "🤔"},
@@ -357,7 +357,7 @@ QUESTIONS = [
     {
         "id": 24, "block": "operacional", "type": "choice",
         "emoji": "🔄",
-        "text": "¿Sabes qué es el Fee de Reposición y por qué se te cobra?",
+        "text": "¿Conoces el Fee de Reposición y a qué va asociado?",
         "subtitle": "Cargo asociado al proceso de reposición de producto en tienda",
         "options": [
             {"value": "no",       "label": "No, no sé qué es",                           "icon": "❌"},
