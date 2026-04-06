@@ -442,8 +442,9 @@ def compute_result(answers: dict) -> dict:
 
     pct = round((score / max_score) * 100) if max_score else 0
 
-    # Segmentación (solo visible en admin)
-    if pct <= 45:
+    # Segmentación: umbral absoluto 40 pts sobre 46
+    UMBRAL = 40
+    if score < UMBRAL:
         segment       = "intermedia"
         segment_label = "PyME Intermedia"
         segment_desc  = (
