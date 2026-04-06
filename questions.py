@@ -12,7 +12,7 @@ BLOCKS = {
 }
 
 QUESTIONS = [
-    # ─ BLOQUE 1: Identificación ────────────────────────────────
+    # ─ BLOQUE 1: Identificación ──────────────────────────────── (Q1-Q4 sin cambios)
     {
         "id": 1, "block": "identificacion", "type": "text",
         "emoji": "🏢",
@@ -73,7 +73,7 @@ QUESTIONS = [
         "score_map": {"si_cursos": 2, "si_sin_cursos": 1, "otra_via": 0},
     },
 
-    # ─ BLOQUE 2: Ecosistema Retail ────────────────────────────
+    # ─ Supply Chain & CD ────────────────────────────────────
     {
         "id": 5, "block": "ecosistema", "type": "choice",
         "emoji": "📦",
@@ -102,6 +102,61 @@ QUESTIONS = [
         "tag": "supply",
     },
     {
+        "id": 9, "block": "ecosistema", "type": "choice",
+        "emoji": "🏥",
+        "text": "¿Conoces los requisitos para una correcta entrega en el Centro de Distribución?",
+        "subtitle": "Etiquetas, Orden de Compra, ventanas horarias y documentación requerida",
+        "options": [
+            {"value": "no_se",  "label": "No, no conozco bien los requisitos de entrega",  "icon": "😕"},
+            {"value": "basico", "label": "Conozco algunos pero tengo dudas frecuentes",     "icon": "🤷"},
+            {"value": "domino", "label": "Sí, los conozco y los cumplo correctamente",      "icon": "✅"},
+        ],
+        "score_map": {"no_se": 0, "basico": 1, "domino": 2},
+        "tag": "supply",
+    },
+    {
+        "id": 13, "block": "comercial", "type": "choice",
+        "emoji": "📌",
+        "text": "¿Sabes cómo y dónde agendar correctamente una cita para entregar en el CD?",
+        "subtitle": "Proceso de agendamiento de ventana horaria en el Centro de Distribución",
+        "options": [
+            {"value": "no_se",  "label": "No, desconozco el proceso de agendamiento",    "icon": "😕"},
+            {"value": "dudas",  "label": "Sí, pero tengo dudas frecuentes",              "icon": "🤷"},
+            {"value": "domino", "label": "Sí, lo sé y lo hago sin problemas",           "icon": "✅"},
+        ],
+        "score_map": {"no_se": 0, "dudas": 1, "domino": 2},
+        "tag": "supply",
+    },
+    {
+        "id": 10, "block": "ecosistema", "type": "choice",
+        "emoji": "👁️",
+        "text": "¿Sabes cómo tener visibilidad de tu inventario en sala?",
+        "subtitle": "Cuántas unidades hay disponibles en góndola y bodega de tienda",
+        "options": [
+            {"value": "no",      "label": "No, no tengo esa información",              "icon": "❌"},
+            {"value": "avisada", "label": "Sí, pero solo cuando me avisan del quiebre", "icon": "🔔"},
+            {"value": "si",      "label": "Sí, lo monitoreo regularmente",              "icon": "✅"},
+        ],
+        "score_map": {"no": 0, "avisada": 1, "si": 2},
+        "tag": "supply",
+    },
+    {
+        "id": 15, "block": "comercial", "type": "choice",
+        "emoji": "⚠️",
+        "text": "¿Con qué frecuencia tienes quiebres de stock en tienda?",
+        "subtitle": "Cuando tu producto no está disponible para el cliente",
+        "options": [
+            {"value": "sin_visib",   "label": "No tengo visibilidad de mis quiebres",     "icon": "😕"},
+            {"value": "frecuente",   "label": "Sí, frecuentemente (más de 1 vez/mes)",   "icon": "🚨"},
+            {"value": "ocasional",   "label": "Sí, ocurren ocasionalmente",              "icon": "⚠️"},
+            {"value": "raro",        "label": "Sí, ocurren rara vez",                   "icon": "✅"},
+        ],
+        "score_map": {"sin_visib": 0, "frecuente": 0, "ocasional": 1, "raro": 2},
+        "tag": "supply",
+    },
+
+    # ─ Retail Link & Datos ──────────────────────────────────
+    {
         "id": 7, "block": "ecosistema", "type": "choice",
         "emoji": "💻",
         "text": "¿Tienes acceso y usas Retail Link?",
@@ -129,32 +184,8 @@ QUESTIONS = [
         "score_map": {"nunca": 0, "mensual": 1, "semanal": 2, "diario": 2},
         "tag": "retail_link",
     },
-    {
-        "id": 9, "block": "ecosistema", "type": "choice",
-        "emoji": "🏥",
-        "text": "¿Conoces los requisitos para una correcta entrega en el Centro de Distribución?",
-        "subtitle": "Etiquetas, Orden de Compra, ventanas horarias y documentación requerida",
-        "options": [
-            {"value": "no_se",  "label": "No, no conozco bien los requisitos de entrega",  "icon": "😕"},
-            {"value": "basico", "label": "Conozco algunos pero tengo dudas frecuentes",     "icon": "🤷"},
-            {"value": "domino", "label": "Sí, los conozco y los cumplo correctamente",      "icon": "✅"},
-        ],
-        "score_map": {"no_se": 0, "basico": 1, "domino": 2},
-        "tag": "supply",
-    },
-    {
-        "id": 10, "block": "ecosistema", "type": "choice",
-        "emoji": "👁️",
-        "text": "¿Sabes cómo tener visibilidad de tu inventario en sala?",
-        "subtitle": "Cuántas unidades hay disponibles en góndola y bodega de tienda",
-        "options": [
-            {"value": "no",      "label": "No, no tengo esa información",              "icon": "❌"},
-            {"value": "avisada", "label": "Sí, pero solo cuando me avisan del quiebre", "icon": "🔔"},
-            {"value": "si",      "label": "Sí, lo monitoreo regularmente",              "icon": "✅"},
-        ],
-        "score_map": {"no": 0, "avisada": 1, "si": 2},
-        "tag": "supply",
-    },
+
+    # ─ Phronesis & Exhibición ────────────────────────────────
     {
         "id": 11, "block": "ecosistema", "type": "choice",
         "emoji": "🔗",
@@ -167,35 +198,6 @@ QUESTIONS = [
         ],
         "score_map": {"no": 0, "oido": 1, "si": 2},
         "tag": "fronesis",
-    },
-
-    # ─ BLOQUE 3: Gestión Comercial ──────────────────────────
-    {
-        "id": 12, "block": "comercial", "type": "choice",
-        "emoji": "🏷️",
-        "text": "¿Participas en actividades promocionales en Walmart?",
-        "subtitle": "Liquidaciones, Precio Especial, Temporadas, Rollback...",
-        "options": [
-            {"value": "no",              "label": "No, nunca he participado",              "icon": "❌"},
-            {"value": "sin_requisitos",  "label": "No, desconozco los requisitos",         "icon": "❓"},
-            {"value": "invitado",        "label": "Sí, pero solo cuando me invitan",       "icon": "📩"},
-            {"value": "activo",          "label": "Sí, las busco activamente",              "icon": "🙋"},
-        ],
-        "score_map": {"no": 0, "sin_requisitos": 0, "invitado": 1, "activo": 2},
-        "tag": "promociones",
-    },
-    {
-        "id": 13, "block": "comercial", "type": "choice",
-        "emoji": "📌",
-        "text": "¿Sabes cómo y dónde agendar correctamente una cita para entregar en el CD?",
-        "subtitle": "Proceso de agendamiento de ventana horaria en el Centro de Distribución",
-        "options": [
-            {"value": "no_se",  "label": "No, desconozco el proceso de agendamiento",    "icon": "😕"},
-            {"value": "dudas",  "label": "Sí, pero tengo dudas frecuentes",              "icon": "🤷"},
-            {"value": "domino", "label": "Sí, lo sé y lo hago sin problemas",           "icon": "✅"},
-        ],
-        "score_map": {"no_se": 0, "dudas": 1, "domino": 2},
-        "tag": "supply",
     },
     {
         "id": 14, "block": "comercial", "type": "choice",
@@ -212,20 +214,6 @@ QUESTIONS = [
         "tag": "fronesis",
     },
     {
-        "id": 15, "block": "comercial", "type": "choice",
-        "emoji": "⚠️",
-        "text": "¿Con qué frecuencia tienes quiebres de stock en tienda?",
-        "subtitle": "Cuando tu producto no está disponible para el cliente",
-        "options": [
-            {"value": "sin_visib",   "label": "No tengo visibilidad de mis quiebres",     "icon": "😕"},
-            {"value": "frecuente",   "label": "Sí, frecuentemente (más de 1 vez/mes)",   "icon": "🚨"},
-            {"value": "ocasional",   "label": "Sí, ocurren ocasionalmente",              "icon": "⚠️"},
-            {"value": "raro",        "label": "Sí, ocurren rara vez",                   "icon": "✅"},
-        ],
-        "score_map": {"sin_visib": 0, "frecuente": 0, "ocasional": 1, "raro": 2},
-        "tag": "supply",
-    },
-    {
         "id": 16, "block": "comercial", "type": "choice",
         "emoji": "🗺️",
         "text": "¿Conoces el proceso de alzas de costo en Walmart?",
@@ -239,6 +227,24 @@ QUESTIONS = [
         "score_map": {"no": 0, "referencia": 0, "conoce": 1, "realizado": 2},
         "tag": "fronesis",
     },
+
+    # ─ Promociones ───────────────────────────────────────────
+    {
+        "id": 12, "block": "comercial", "type": "choice",
+        "emoji": "🏷️",
+        "text": "¿Participas en actividades promocionales en Walmart?",
+        "subtitle": "Liquidaciones, Precio Especial, Temporadas, Rollback...",
+        "options": [
+            {"value": "no",              "label": "No, nunca he participado",              "icon": "❌"},
+            {"value": "sin_requisitos",  "label": "No, desconozco los requisitos",         "icon": "❓"},
+            {"value": "invitado",        "label": "Sí, pero solo cuando me invitan",       "icon": "📩"},
+            {"value": "activo",          "label": "Sí, las busco activamente",              "icon": "🙋"},
+        ],
+        "score_map": {"no": 0, "sin_requisitos": 0, "invitado": 1, "activo": 2},
+        "tag": "promociones",
+    },
+
+    # ─ Compradores & Comercial ───────────────────────────────
     {
         "id": 17, "block": "comercial", "type": "choice",
         "emoji": "💰",
@@ -251,21 +257,6 @@ QUESTIONS = [
         ],
         "score_map": {"no": 0, "parcial": 1, "si": 2},
         "tag": "compradores",
-    },
-
-    # ─ BLOQUE 4: Negocio & Datos ─────────────────────────────
-    {
-        "id": 18, "block": "negocio", "type": "choice",
-        "emoji": "🏷️",
-        "text": "¿Conoces el Programa de Marca Propia de Walmart?",
-        "subtitle": "Walmart desarrolla productos bajo su propia marca con proveedores seleccionados",
-        "options": [
-            {"value": "no",         "label": "No, no lo conozco",                                    "icon": "🤔"},
-            {"value": "referencia", "label": "Sí, he escuchado de él pero no sé cómo funciona",     "icon": "👂"},
-            {"value": "conoce",     "label": "Sí, lo conozco y me interesa participar",              "icon": "💡"},
-            {"value": "participa",  "label": "Sí, ya participo o he participado en él",              "icon": "✅"},
-        ],
-        "score_map": {"no": 0, "referencia": 1, "conoce": 1, "participa": 2},
     },
     {
         "id": 19, "block": "negocio", "type": "choice",
@@ -295,7 +286,22 @@ QUESTIONS = [
         "tag": "compradores",
     },
 
-    # ─ BLOQUE 5: Gestión Operacional (nuevas preguntas) ────────────
+    # ─ Negocio & Marca Propia ──────────────────────────────
+    {
+        "id": 18, "block": "negocio", "type": "choice",
+        "emoji": "🏷️",
+        "text": "¿Conoces el Programa de Marca Propia de Walmart?",
+        "subtitle": "Walmart desarrolla productos bajo su propia marca con proveedores seleccionados",
+        "options": [
+            {"value": "no",         "label": "No, no lo conozco",                                    "icon": "🤔"},
+            {"value": "referencia", "label": "Sí, he escuchado de él pero no sé cómo funciona",     "icon": "👂"},
+            {"value": "conoce",     "label": "Sí, lo conozco y me interesa participar",              "icon": "💡"},
+            {"value": "participa",  "label": "Sí, ya participo o he participado en él",              "icon": "✅"},
+        ],
+        "score_map": {"no": 0, "referencia": 1, "conoce": 1, "participa": 2},
+    },
+
+    # ─ Gestión Operacional ───────────────────────────────────
     {
         "id": 20, "block": "operacional", "type": "choice",
         "emoji": "📞",
