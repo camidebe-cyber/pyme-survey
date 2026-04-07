@@ -54,10 +54,9 @@ def _ph(n: int = 1) -> str:
 
 
 def _row(cursor, row):
-    """Convierte fila a dict de forma compatible con ambos backends."""
-    if USE_POSTGRES:
-        cols = [d[0] for d in cursor.description]
-        return dict(zip(cols, row))
+    """Convierte fila a dict de forma compatible con ambos backends.
+    RealDictCursor y sqlite3.Row soportan dict() directamente.
+    """
     return dict(row)
 
 
@@ -158,8 +157,8 @@ def get_answers(session_id: str) -> dict:
             (session_id,)
         )
         rows = cur.fetchall()
-        return {str(r[0] if USE_POSTGRES else r["question_id"]):
-                (r[1] if USE_POSTGRES else r["answer"]) for r in rows}
+        # RealDictCursor (postgres) y sqlite3.Row soportan keys string
+        return {str(r["question_id"]): r["answer"] for r in rows}
 
 
 def mark_complete(session_id: str):
