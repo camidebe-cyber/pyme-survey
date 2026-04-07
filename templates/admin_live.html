@@ -1,0 +1,123 @@
+{# Partial – se inserta en #live-panel cada 20s vía HTMX #}
+
+<!-- Stats cards -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+  <div class="stat-card p-5">
+    <div class="text-xs font-semibold uppercase text-gray-400 mb-1">Total iniciadas</div>
+    <div class="text-4xl font-extrabold" style="color:var(--navy)">{{ stats.total }}</div>
+    <div class="text-xs text-gray-400 mt-1">{{ stats.en_progreso }} en progreso</div>
+  </div>
+  <div class="stat-card p-5">
+    <div class="text-xs font-semibold uppercase text-gray-400 mb-1">Completadas</div>
+    <div class="text-4xl font-extrabold" style="color:var(--blue)">{{ stats.completadas }}</div>
+    <div class="text-xs text-gray-400 mt-1">de {{ stats.total }} iniciadas</div>
+  </div>
+  <div class="stat-card p-5 border-l-4" style="border-left-color:var(--gold)">
+    <div class="text-xs font-semibold uppercase text-gray-400 mb-1">&#128640; PyME Madura</div>
+    <div class="text-4xl font-extrabold" style="color:var(--navy)">{{ stats.maduras }}</div>
+    <div class="text-xs text-gray-400 mt-1">{{ stats.pct_mad }}% del total</div>
+  </div>
+  <div class="stat-card p-5 border-l-4" style="border-left-color:var(--cyan)">
+    <div class="text-xs font-semibold uppercase text-gray-400 mb-1">&#9889; En Desarrollo</div>
+    <div class="text-4xl font-extrabold" style="color:var(--navy)">{{ stats.intermedias }}</div>
+    <div class="text-xs text-gray-400 mt-1">{{ stats.pct_inter }}% &bull; Prom. {{ stats.avg_score }}%</div>
+  </div>
+</div>
+
+<!-- Indicador última actualización -->
+<div class="flex items-center justify-between mb-3">
+  <span class="text-xs text-gray-400">
+    {{ rows|length }} resultado{{ 's' if rows|length != 1 else '' }}
+  </span>
+  <span class="flex items-center gap-1.5 text-xs text-gray-400">
+    <span class="live-dot" style="
+      display:inline-block; width:8px; height:8px; border-radius:50%;
+      background:#2a8703; animation: pulse 2s infinite;
+    "></span>
+    Actualizado a las {{ now }}
+  </span>
+</div>
+
+<!-- Tabla -->
+<div class="bg-white rounded-2xl shadow-sm overflow-x-auto">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="text-left text-xs font-bold uppercase text-gray-400"
+          style="background:#f8fafc; border-bottom:2px solid #e5e7eb">
+        <th class="px-4 py-3">RUT</th>
+        <th class="px-4 py-3">Razón Social</th>
+        <th class="px-4 py-3">Email</th>
+        <th class="px-4 py-3">Segmento</th>
+        <th class="px-4 py-3">Score</th>
+        <th class="px-4 py-3">Estado</th>
+        <th class="px-4 py-3">Fecha</th>
+        <th class="px-4 py-3"></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-100">
+      {% for r in rows %}
+      <tr class="row-hover transition-colors" onclick="window.open('/resultados/{{ r.id }}','_blank')">
+        <td class="px-4 py-3 font-mono text-xs text-gray-600">{{ r.rut or '—' }}</td>
+        <td class="px-4 py-3 font-semibold" style="color:var(--navy)">
+          {{ r.razon_social or 'Sin nombre' }}
+        </td>
+        <td class="px-4 py-3 text-xs text-gray-500">
+          {% if r.email %}
+          <a href="mailto:{{ r.email }}" onclick="event.stopPropagation()"
+             class="underline hover:text-blue-600">{{ r.email }}</a>
+          {% else %}&mdash;{% endif %}
+        </td>
+        <td class="px-4 py-3">
+          {% if r.completed %}
+            <span class="tag {{ 'badge-madura' if r.segment == 'madura' else 'badge-inter' }}">
+              {{ r.segment_label }}
+            </span>
+          {% else %}
+            <span class="tag badge-prog">En progreso</span>
+          {% endif %}
+        </td>
+        <td class="px-4 py-3">
+          {% if r.completed %}
+          <div class="flex items-center gap-2">
+            <div class="w-16 h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div class="h-full rounded-full"
+                   style="width:{{ r.pct }}%;
+                          background:{% if r.pct >= 60 %}var(--blue){% else %}var(--gold){% endif %}"></div>
+            </div>
+            <span class="font-bold text-xs" style="color:var(--navy)">{{ r.pct }}%</span>
+          </div>
+          {% else %}
+          <span class="text-gray-300 text-xs">—</span>
+          {% endif %}
+        </td>
+        <td class="px-4 py-3">
+          {% if r.completed %}
+            <span class="w-2 h-2 rounded-full inline-block mr-1" style="background:#2a8703"></span>
+            <span class="text-xs text-gray-500">Completa</span>
+          {% else %}
+            <span class="w-2 h-2 rounded-full inline-block mr-1" style="background:var(--gold)"></span>
+            <span class="text-xs text-gray-400">Parcial</span>
+          {% endif %}
+        </td>
+        <td class="px-4 py-3 text-xs text-gray-400">{{ r.created_at[:10] if r.created_at else '—' }}</td>
+        <td class="px-4 py-3">
+          <span class="text-xs font-semibold" style="color:var(--blue)">Ver &#8594;</span>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="8" class="px-4 py-16 text-center text-gray-300">
+          <div class="text-4xl mb-3">&#128202;</div>
+          <p>No hay respuestas aún.</p>
+          <p class="text-xs mt-1">Comparte el link de arriba con tus proveedores para comenzar.</p>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<p class="text-center text-xs text-gray-300 mt-5">
+  Haz clic en cualquier fila para el detalle &bull;
+  <a href="/resultados/export/csv" class="underline" style="color:var(--blue)">Descargar CSV completo</a>
+</p>

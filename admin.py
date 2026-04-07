@@ -141,14 +141,15 @@ async def reset_data():
 # ── Dashboard ───────────────────────────────────────────────────────────────
 @router.get("/resultados", response_class=HTMLResponse)
 async def dashboard(request: Request, q: str = ""):
-    rows  = _all_sessions()
+    all_rows = _all_sessions()
+    rows     = all_rows
     if q:
         q_low = q.lower()
         rows  = [r for r in rows
                  if q_low in r["rut"].lower()
                  or q_low in r["razon_social"].lower()
                  or q_low in r["email"].lower()]
-    stats = _stats(_all_sessions())
+    stats = _stats(all_rows)
     survey_url, net_type = get_survey_url()
     return templates.TemplateResponse(request, "admin.html", {
         "rows":        rows,
@@ -157,6 +158,28 @@ async def dashboard(request: Request, q: str = ""):
         "area_labels": AREA_LABELS,
         "survey_url":  survey_url,
         "net_type":    net_type,
+        "now":         datetime.now().strftime("%H:%M:%S"),
+    })
+
+
+# ── Partial: stats + tabla (para HTMX polling) ───────────────────────────────
+@router.get("/resultados/live", response_class=HTMLResponse)
+async def live_partial(request: Request, q: str = ""):
+    all_rows = _all_sessions()
+    rows     = all_rows
+    if q:
+        q_low = q.lower()
+        rows  = [r for r in rows
+                 if q_low in r["rut"].lower()
+                 or q_low in r["razon_social"].lower()
+                 or q_low in r["email"].lower()]
+    stats = _stats(all_rows)
+    return templates.TemplateResponse(request, "admin_live.html", {
+        "rows":        rows,
+        "stats":       stats,
+        "q":           q,
+        "area_labels": AREA_LABELS,
+        "now":         datetime.now().strftime("%H:%M:%S"),
     })
 
 
