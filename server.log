@@ -17,3 +17,11 @@ INFO:     127.0.0.1:54641 - "POST /prev HTTP/1.1" 200 OK
 INFO:     127.0.0.1:54641 - "POST /prev HTTP/1.1" 200 OK
 INFO:     127.0.0.1:54641 - "POST /prev HTTP/1.1" 200 OK
 INFO:     127.0.0.1:54641 - "POST /prev HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64162 - "GET /formulario HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64162 - "GET /resultados HTTP/1.1" 200 OK
+INFO:     10.86.14.193:58707 - "GET /formulario HTTP/1.1" 200 OK
+INFO:     10.86.14.193:58707 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:56395 - "GET /survey/1a83d746-4e6b-434e-9c6b-3537cfdfe3ba HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56395 - "POST /answer HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56395 - "POST /prev HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56395 - "POST /answer HTTP/1.1" 200 OK

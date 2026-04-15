@@ -11,6 +11,7 @@ from fastapi.templating import Jinja2Templates
 
 from db import create_session, get_session, save_answer, get_answers, mark_complete, init_db
 from questions import BLOCKS, QUESTIONS, compute_result
+from onedrive_sync import notify_new_response
 
 TOTAL_Q = len(QUESTIONS)
 TEMPL   = Path(__file__).parent / "templates"
@@ -101,8 +102,15 @@ async def answer(
 
         if next_index >= TOTAL_Q:
             mark_complete(session_id)
+            answers = get_answers(session_id)  # refrescar con ultima respuesta
             result  = compute_result(answers)
             company = session.get("razon_social") or answers.get("1", "PyME")
+
+            # Notificar a OneDrive via Power Automate (async, no bloquea)
+            asyncio.create_task(
+                notify_new_response(session, answers, result)
+            )
+
             return templates.TemplateResponse(request, "result.html",
                 {"company": company, **result})
 
@@ -117,7 +125,7 @@ async def answer(
                 <p style='font-size:1.5rem'>&#9888; Error inesperado</p>
                 <p style='color:#666;margin-top:.5rem'>{exc}</p>
                 <p style='margin-top:1rem'>
-                  <a href='/' style='color:#002060;font-weight:bold'>&#8592; Volver al inicio</a>
+                  <a href='/formulario' style='color:#002060;font-weight:bold'>&#8592; Volver al formulario</a>
                 </p></div>""",
             status_code=200
         )
@@ -147,7 +155,7 @@ async def prev(
                 <p style='font-size:1.5rem'>&#9888; Error inesperado</p>
                 <p style='color:#666;margin-top:.5rem'>{exc}</p>
                 <p style='margin-top:1rem'>
-                  <a href='/' style='color:#002060;font-weight:bold'>&#8592; Volver al inicio</a>
+                  <a href='/formulario' style='color:#002060;font-weight:bold'>&#8592; Volver al formulario</a>
                 </p></div>""",
             status_code=200
         )

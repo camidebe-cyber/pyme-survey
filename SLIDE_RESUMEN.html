@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Resumen Cuestionario PyME – Walmart Chile</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', Arial, sans-serif; background: #f0f4fb; color: #1a1a2e; }
+
+  .slide {
+    width: 1280px;
+    min-height: 720px;
+    margin: 32px auto;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 40px rgba(0,32,96,.15);
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(135deg, #001e60 0%, #0053e2 100%);
+    padding: 28px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .header-left svg { width: 44px; height: 44px; }
+  .header-title { color: white; }
+  .header-title h1 { font-size: 22px; font-weight: 900; line-height: 1.2; }
+  .header-title p  { font-size: 13px; opacity: .7; margin-top: 2px; }
+  .header-right {
+    background: #FFC220; color: #001e60;
+    font-weight: 800; font-size: 13px;
+    padding: 8px 20px; border-radius: 999px;
+  }
+
+  /* ── BODY ── */
+  .body { padding: 28px 40px 20px; }
+
+  /* ── STATS ROW ── */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    border-radius: 14px;
+    padding: 16px 20px;
+    text-align: center;
+  }
+  .stat-card.blue  { background: #001e60; color: white; }
+  .stat-card.spark { background: #FFC220; color: #001e60; }
+  .stat-card.green { background: #EAF6EC; color: #1a5702; border: 2px solid #2a8703; }
+  .stat-card.amber { background: #FFF9E6; color: #6b3a00; border: 2px solid #FFC220; }
+  .stat-card .num  { font-size: 36px; font-weight: 900; line-height: 1; }
+  .stat-card .lbl  { font-size: 11px; font-weight: 700; margin-top: 4px; opacity: .8; text-transform: uppercase; letter-spacing: .05em; }
+
+  /* ── BLOQUES ── */
+  .blocks-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .block-card {
+    border-radius: 14px;
+    padding: 16px 18px;
+    background: #f8f9fb;
+    border-left: 4px solid #0053e2;
+  }
+  .block-card.b1 { border-color: #0053e2; }
+  .block-card.b2 { border-color: #00B0F0; }
+  .block-card.b3 { border-color: #FFC220; }
+  .block-card.b4 { border-color: #2a8703; }
+  .block-card.b5 { border-color: #ea1100; }
+
+  .block-title {
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .block-title.b1 { color: #0053e2; }
+  .block-title.b2 { color: #0077aa; }
+  .block-title.b3 { color: #7a4f00; }
+  .block-title.b4 { color: #1a5702; }
+  .block-title.b5 { color: #b00000; }
+
+  .q-item {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    padding: 5px 0;
+    border-bottom: 1px solid #e8ecf5;
+    font-size: 11.5px;
+    line-height: 1.4;
+    color: #333;
+  }
+  .q-item:last-child { border-bottom: none; }
+  .q-num {
+    font-size: 10px;
+    font-weight: 800;
+    color: white;
+    background: #0053e2;
+    border-radius: 50%;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .b2 .q-num { background: #00B0F0; }
+  .b3 .q-num { background: #995213; }
+  .b4 .q-num { background: #2a8703; }
+  .b5 .q-num { background: #ea1100; }
+
+  .tag-pill {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: #e8ecf5;
+    color: #555;
+    margin-left: 4px;
+    flex-shrink: 0;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: #001e60;
+    color: rgba(255,255,255,.6);
+    text-align: center;
+    padding: 14px;
+    font-size: 11px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 40px;
+  }
+  .footer strong { color: white; }
+
+  /* ── PRINT / EXPORT ── */
+  @media print {
+    body { background: white; }
+    .slide { box-shadow: none; margin: 0; border-radius: 0; width: 100%; }
+    .print-btn { display: none; }
+  }
+
+  .print-btn {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    background: #0053e2; color: white;
+    border: none; padding: 14px 28px;
+    border-radius: 12px; font-size: 14px;
+    font-weight: 700; cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,83,226,.4);
+    font-family: 'Inter', sans-serif;
+  }
+  .print-btn:hover { background: #001e60; }
+</style>
+</head>
+<body>
+
+<div class="slide">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <svg viewBox="0 0 60 60">
+        <g fill="#FFC220">
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(0 30 30)"/>
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(60 30 30)"/>
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(120 30 30)"/>
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(180 30 30)"/>
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(240 30 30)"/>
+          <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(300 30 30)"/>
+        </g>
+      </svg>
+      <div class="header-title">
+        <h1>Cuestionario PyME Walmart Chile 2026</h1>
+        <p>Resumen de preguntas por bloque temático · 25 preguntas · 5 bloques</p>
+      </div>
+    </div>
+    <div class="header-right">CONFIDENCIAL · USO INTERNO</div>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <!-- STATS -->
+    <div class="stats">
+      <div class="stat-card blue">
+        <div class="num">25</div>
+        <div class="lbl">Total Preguntas</div>
+      </div>
+      <div class="stat-card spark">
+        <div class="num">46</div>
+        <div class="lbl">Puntaje Máximo</div>
+      </div>
+      <div class="stat-card green">
+        <div class="num">≥46%</div>
+        <div class="lbl">PyME Madura</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="num">&lt;46%</div>
+        <div class="lbl">PyME Intermedia</div>
+      </div>
+    </div>
+
+    <!-- BLOQUES -->
+    <div class="blocks-grid">
+
+      <!-- BLOQUE 1: IDENTIFICACIÓN -->
+      <div class="block-card b1">
+        <div class="block-title b1">🏢 Bloque 1 · Identificación</div>
+        <div class="q-item">
+          <div class="q-num b1">1</div>
+          <span>¿Cómo se llama tu empresa o marca? <em style="color:#aaa">(texto libre)</em></span>
+        </div>
+        <div class="q-item">
+          <div class="q-num b1">2</div>
+          <span>¿En qué categoría está tu producto?</span>
+        </div>
+        <div class="q-item">
+          <div class="q-num b1">3</div>
+          <span>¿Hace cuánto tiempo eres proveedor de Walmart?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+        <div class="q-item">
+          <div class="q-num b1">4</div>
+          <span>¿Ingresaste al programa Potencia PyME de Walmart?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+      </div>
+
+      <!-- BLOQUE 2: SUPPLY CHAIN -->
+      <div class="block-card b2">
+        <div class="block-title b2">📦 Bloque 2 · Supply Chain & CD</div>
+        <div class="q-item">
+          <div class="q-num b2">5</div>
+          <span>¿Conoces tu Fill Rate actual con Walmart?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+        <div class="q-item">
+          <div class="q-num b2">6</div>
+          <span>¿Sabes qué es el In-Stock y lo monitoreas?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+        <div class="q-item">
+          <div class="q-num b2">7</div>
+          <span>¿Conoces los requisitos para una correcta entrega en el CD?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+        <div class="q-item">
+          <div class="q-num b2">8</div>
+          <span>¿Sabes cómo y dónde agendar una cita para entregar en el CD?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+        <div class="q-item">
+          <div class="q-num b2">9</div>
+          <span>¿Sabes cómo tener visibilidad de tu inventario en sala?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+        <div class="q-item">
+          <div class="q-num b2">10</div>
+          <span>¿Con qué frecuencia tienes quiebres de stock en tienda?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+      </div>
+
+      <!-- BLOQUE 3: RETAIL LINK + PHRONESIS -->
+      <div class="block-card b3">
+        <div class="block-title b3">💻 Bloque 3 · Retail Link & Phronesis</div>
+        <div class="q-item">
+          <div class="q-num b3">11</div>
+          <span>¿Tienes acceso y usas Retail Link?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+        <div class="q-item">
+          <div class="q-num b3">12</div>
+          <span>¿Con qué frecuencia revisas el desempeño de tus ventas?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+        <div class="q-item">
+          <div class="q-num b3">13</div>
+          <span>¿Conoces y usas Phronesis?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+        <div class="q-item">
+          <div class="q-num b3">14</div>
+          <span>¿Sabes en qué locales están presentes tus productos?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+        <div class="q-item">
+          <div class="q-num b3">15</div>
+          <span>¿Conoces el proceso de alzas de costo en Walmart?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+        <div class="q-item">
+          <div class="q-num b3">16</div>
+          <span>¿Participas en actividades promocionales en Walmart?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+      </div>
+
+      <!-- BLOQUE 4: GESTIÓN COMERCIAL -->
+      <div class="block-card b4">
+        <div class="block-title b4">🛒 Bloque 4 · Gestión Comercial & Negocio</div>
+        <div class="q-item">
+          <div class="q-num b4">17</div>
+          <span>¿Sabes la diferencia entre un costo neto y un costo limpio?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+        <div class="q-item">
+          <div class="q-num b4">18</div>
+          <span>¿Quién es el representante de tu cuenta en Walmart?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+        <div class="q-item">
+          <div class="q-num b4">19</div>
+          <span>¿Conoces el Programa de Marca Propia de Walmart?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+        <div class="q-item">
+          <div class="q-num b4">20</div>
+          <span>¿Sabes a quién contactar cuando tienes problemas con Walmart?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+        <div class="q-item">
+          <div class="q-num b4">21</div>
+          <span>¿La persona que contactas te responde siempre?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+      </div>
+
+      <!-- BLOQUE 5: GESTIÓN OPERACIONAL -->
+      <div class="block-card b5">
+        <div class="block-title b5">⚙️ Bloque 5 · Gestión Operacional</div>
+        <div class="q-item">
+          <div class="q-num b5">22</div>
+          <span>¿Cuando hay un rechazo, entiendes por qué y qué hacer?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+        <div class="q-item">
+          <div class="q-num b5">23</div>
+          <span>¿Sabes qué es el Fee de Última Milla y por qué se te cobra?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+        <div class="q-item">
+          <div class="q-num b5">24</div>
+          <span>¿Conoces el Fee de Reposición y a qué va asociado?</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+        <div class="q-item">
+          <div class="q-num b5">25</div>
+          <span>¿Tu planta cuenta con certificación de calidad vigente? (GFSI)</span>
+          <span class="tag-pill">puntúa</span>
+        </div>
+      </div>
+
+      <!-- ESCALA DE PUNTAJE -->
+      <div class="block-card" style="border-color:#001e60; background:#f0f4ff;">
+        <div class="block-title" style="color:#001e60;">📊 Escala de Puntaje</div>
+        <div style="font-size:12px; color:#333; line-height:1.7;">
+          <div style="display:flex; align-items:center; gap:8px; padding:4px 0; border-bottom:1px solid #dde4f0;">
+            <span style="font-size:16px; font-weight:900; color:#ea1100; width:24px;">0</span>
+            <span>No conoce / No lo hace</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; padding:4px 0; border-bottom:1px solid #dde4f0;">
+            <span style="font-size:16px; font-weight:900; color:#995213; width:24px;">1</span>
+            <span>Conoce pero no gestiona activamente</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; padding:4px 0;">
+            <span style="font-size:16px; font-weight:900; color:#2a8703; width:24px;">2</span>
+            <span>Domina y gestiona activamente</span>
+          </div>
+          <div style="margin-top:12px; background:white; border-radius:10px; padding:10px 12px; border:2px solid #001e60;">
+            <div style="font-weight:800; color:#001e60; font-size:11px; margin-bottom:6px;">SEGMENTACIÓN</div>
+            <div style="display:flex; height:18px; border-radius:99px; overflow:hidden; font-size:10px; font-weight:700;">
+              <div style="background:#FFC220; width:45%; display:flex; align-items:center; justify-content:center; color:#6b3a00;">Intermedia 0–45%</div>
+              <div style="background:#2a8703; width:55%; display:flex; align-items:center; justify-content:center; color:white;">Madura 46–100%</div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:10px; color:#888; margin-top:4px;">
+              <span>0 pts</span><span>Umbral ≈21 pts</span><span>46 pts</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span>Walmart Chile &bull; <strong>Programa PyME 2026</strong></span>
+    <span>Formulario: <strong>pyme-survey.onrender.com/formulario</strong></span>
+    <span>Documento de uso interno</span>
+  </div>
+
+</div>
+
+<button class="print-btn" onclick="window.print()">🖨️ Guardar como PDF</button>
+
+</body>
+</html>

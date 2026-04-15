@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', Arial, sans-serif;
+    background: white;
+    padding: 24px;
+    width: 460px;
+  }
+  .block-card {
+    border-radius: 14px;
+    padding: 20px;
+    background: #f0f4ff;
+    border-left: 4px solid #001e60;
+  }
+  .block-title {
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #001e60;
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid #dde4f0;
+    font-size: 13px;
+    color: #333;
+    line-height: 1.5;
+  }
+  .row:last-of-type { border-bottom: none; }
+  .pts {
+    font-size: 20px;
+    font-weight: 900;
+    width: 26px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .seg-box {
+    margin-top: 14px;
+    background: white;
+    border-radius: 10px;
+    padding: 12px 14px;
+    border: 2px solid #001e60;
+  }
+  .seg-title {
+    font-weight: 800;
+    color: #001e60;
+    font-size: 11px;
+    margin-bottom: 8px;
+    letter-spacing: .06em;
+  }
+  .seg-bar {
+    display: flex;
+    height: 22px;
+    border-radius: 99px;
+    overflow: hidden;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .seg-int {
+    background: #FFC220;
+    width: 65%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b3a00;
+  }
+  .seg-mad {
+    background: #2a8703;
+    width: 35%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+  .seg-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #888;
+    margin-top: 6px;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+<div class="block-card">
+  <div class="block-title">📊 Escala de Puntaje</div>
+
+  <div class="row">
+    <span class="pts" style="color:#ea1100">0</span>
+    <span>No conoce / No lo hace</span>
+  </div>
+  <div class="row">
+    <span class="pts" style="color:#995213">1</span>
+    <span>Conoce pero no gestiona activamente</span>
+  </div>
+  <div class="row">
+    <span class="pts" style="color:#2a8703">2</span>
+    <span>Domina y gestiona activamente</span>
+  </div>
+
+  <div class="seg-box">
+    <div class="seg-title">SEGMENTACIÓN</div>
+    <div class="seg-bar">
+      <div class="seg-int">Intermedia · 0–39 pts</div>
+      <div class="seg-mad">Madura · 40–46</div>
+    </div>
+    <div class="seg-labels">
+      <span>0 pts</span>
+      <span>Umbral: 40 pts</span>
+      <span>46 pts</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
