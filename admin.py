@@ -14,7 +14,7 @@ from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 
 from fastapi import APIRouter, Request, UploadFile, File
-from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 
 from db import get_conn, create_session, save_answer, mark_complete
@@ -136,6 +136,23 @@ async def reset_data():
         cur.execute("DELETE FROM answers")
         cur.execute("DELETE FROM sessions")
     return RedirectResponse(url="/resultados", status_code=303)
+
+
+# ── Descarga de Excel Manual (Plan B) ──────────────────────────────────────────
+@router.get("/descargar-excel-manual")
+async def descargar_excel_manual():
+    """Permite a los proveedores descargar la plantilla de Excel
+    directamente haciendo clic en el PDF o ingresando a la URL."""
+    try:
+        file_path = Path(__file__).parent / "ENCUESTA_MANUAL_PYME.xlsx"
+        return FileResponse(
+            path=file_path,
+            filename="ENCUESTA_MANUAL_PYME.xlsx",
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+    except Exception as e:
+        print(f"Error sirviendo Excel de descarga: {e}")
+        return HTMLResponse("Archivo no disponible en este momento", status_code=404)
 
 
 # ── Importación de Excel Manual (Plan B) ───────────────────────────────────────
