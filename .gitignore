@@ -7,10 +7,11 @@ __pycache__/
 # Base de datos local (no subir - Render usa su propio disco)
 survey.db
 
-# Archivos de datos sensibles
+# Archivos de datos sensibles (excepto la plantilla manual)
 *.csv
 *.xlsx
 *.xls
+!ENCUESTA_MANUAL_PYME.xlsx
 
 # Variables de entorno
 .env
