@@ -13,11 +13,11 @@ import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, UploadFile, File
 from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
 
-from db import get_conn
+from db import get_conn, create_session, save_answer, mark_complete
 from questions import QUESTIONS, AREA_LABELS, compute_result
 
 PORT = int(os.environ.get("PORT", 8777))
@@ -136,6 +136,60 @@ async def reset_data():
         cur.execute("DELETE FROM answers")
         cur.execute("DELETE FROM sessions")
     return RedirectResponse(url="/resultados", status_code=303)
+
+
+# ── Importación de Excel Manual (Plan B) ───────────────────────────────────────
+@router.post("/resultados/importar-excel")
+async def importar_excel_manual(file: UploadFile = File(...)):
+    """Recibe un archivo Excel del Plan B (ENCUESTA_MANUAL_PYME.xlsx),
+    lo procesa, lo guarda en la base de datos y calcula sus métricas."""
+    try:
+        content = await file.read()
+        wb = openpyxl.load_workbook(io.BytesIO(content), data_only=True)
+        ws = wb.active
+
+        # Lectura de identificación de la empresa (C5, C6, C7)
+        rut = str(ws["C5"].value or "").strip()
+        razon_social = str(ws["C6"].value or "").strip()
+        email = str(ws["C7"].value or "").strip()
+
+        if not rut or not razon_social:
+            return RedirectResponse(url="/resultados?error=excel_invalido", status_code=303)
+
+        # Crear sesión en la base de datos
+        sid = create_session(rut, razon_social, email)
+
+        # Recorremos filas de la 10 a la 34 (las 25 preguntas)
+        for row in range(10, 35):
+            qid = ws.cell(row=row, column=1).value
+            respuesta_user = str(ws.cell(row=row, column=3).value or "").strip()
+
+            if not qid:
+                continue
+
+            mapped_ans = respuesta_user
+            q = Q_MAP.get(str(qid))
+            if q and q["options"]:
+                # Mapeo por coincidencia inteligente de texto
+                matched = False
+                for opt in q["options"]:
+                    if respuesta_user.lower() in opt["label"].lower() or opt["label"].lower() in respuesta_user.lower():
+                        mapped_ans = opt["value"]
+                        matched = True
+                        break
+                if not matched and respuesta_user:
+                    # Si escribió algo pero no hizo match perfecto, dejamos el primer valor por defecto
+                    mapped_ans = q["options"][0]["value"]
+            
+            save_answer(sid, int(qid), mapped_ans)
+
+        # Marcamos la sesión como completada para que se compute en el dashboard
+        mark_complete(sid)
+        return RedirectResponse(url="/resultados?success=excel_importado", status_code=303)
+
+    except Exception as e:
+        print(f"Error importando Excel manual: {e}")
+        return RedirectResponse(url="/resultados?error=excel_error", status_code=303)
 
 
 # ── Dashboard ───────────────────────────────────────────────────────────────
