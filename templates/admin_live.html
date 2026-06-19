@@ -105,7 +105,7 @@
           <span class="text-xs font-semibold" style="color:var(--blue)">Ver &#8594;</span>
         </td>
         <td class="px-4 py-3" onclick="event.stopPropagation()">
-          <form method="post" action="/resultados/eliminar/{{ r.id }}" onsubmit="return confirm('¿Estás segura de que deseas eliminar permanentemente a {{ r.razon_social or \'esta PyME\' }} y sus respuestas del panel? Esta acción no se puede deshacer.');" class="m-0 p-0 flex items-center justify-center">
+          <form method="post" action="/resultados/eliminar/{{ r.id }}" onsubmit="return confirm('¿Estás segura de que deseas eliminar permanentemente esta PyME y sus respuestas del panel? Esta acción no se puede deshacer.');" class="m-0 p-0 flex items-center justify-center">
             <button type="submit" class="text-gray-400 hover:text-red-600 transition text-sm select-none" title="Eliminar permanentemente">
               🗑️
             </button>
