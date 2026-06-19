@@ -160,7 +160,7 @@ async def descargar_excel_manual():
 async def descargar_pdf_guia():
     """Permite descargar la Guía PDF oficial del Proveedor en el Dashboard."""
     try:
-        file_path = Path(__file__).parent.parent / "GUIA_ENCUESTA_PYME.pdf"
+        file_path = Path(__file__).parent / "GUIA_ENCUESTA_PYME.pdf"
         return FileResponse(
             path=file_path,
             filename="GUIA_ENCUESTA_PYME.pdf",
