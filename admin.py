@@ -155,6 +155,26 @@ async def descargar_excel_manual():
         return HTMLResponse("Archivo no disponible en este momento", status_code=404)
 
 
+# ── Eliminación de PyME Manual (Tachito de Basura) ───────────────────────────
+@router.post("/resultados/eliminar/{session_id}")
+async def eliminar_sesion(session_id: str):
+    """Elimina permanentemente una sesión y todas sus respuestas asociadas,
+    tanto en SQLite (local) como en PostgreSQL (producción)."""
+    try:
+        from db import get_conn, _ph
+        ph = _ph(1)
+        with get_conn() as conn:
+            cur = conn.cursor()
+            # Eliminar respuestas en cascada primero
+            cur.execute(f"DELETE FROM answers WHERE session_id = {ph}", (session_id,))
+            # Eliminar la sesión
+            cur.execute(f"DELETE FROM sessions WHERE id = {ph}", (session_id,))
+        return RedirectResponse(url="/resultados?success=eliminado", status_code=303)
+    except Exception as e:
+        print(f"Error eliminando sesión del panel: {e}")
+        return RedirectResponse(url="/resultados?error=eliminar_error", status_code=303)
+
+
 # ── Importación de Excel Manual (Plan B) ───────────────────────────────────────
 @router.post("/resultados/importar-excel")
 async def importar_excel_manual(file: UploadFile = File(...)):

@@ -111,11 +111,17 @@
     if (urlParams.get('success') === 'excel_importado') {
         alert("¡Éxito! 🤓 El Excel manual del proveedor se procesó correctamente y sus datos ya están sumados al panel.");
         window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (urlParams.get('success') === 'eliminado') {
+        alert("¡Éxito! 🗑️ La PyME seleccionada y sus respuestas han sido eliminadas permanentemente de la base de datos.");
+        window.history.replaceState({}, document.title, window.location.pathname);
     } else if (urlParams.get('error') === 'excel_invalido') {
         alert("⚠️ Error: El Excel no contiene RUT o Razón Social válidos en las celdas C5 y C6.");
         window.history.replaceState({}, document.title, window.location.pathname);
     } else if (urlParams.get('error') === 'excel_error') {
         alert("⚠️ Error: Hubo un problema al procesar el archivo Excel. Asegúrate de usar la plantilla correcta.");
+        window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (urlParams.get('error') === 'eliminar_error') {
+        alert("⚠️ Error: No se pudo eliminar la PyME seleccionada. Inténtalo de nuevo más tarde.");
         window.history.replaceState({}, document.title, window.location.pathname);
     }
   </script>

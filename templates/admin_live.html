@@ -51,7 +51,8 @@
         <th class="px-4 py-3">Score</th>
         <th class="px-4 py-3">Estado</th>
         <th class="px-4 py-3">Fecha</th>
-        <th class="px-4 py-3"></th>
+        <th class="px-4 py-3"></th> <!-- Para Ver -->
+        <th class="px-4 py-3"></th> <!-- Para Tachito de basura -->
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-100">
@@ -102,6 +103,13 @@
         <td class="px-4 py-3 text-xs text-gray-400">{{ r.created_at[:10] if r.created_at else '—' }}</td>
         <td class="px-4 py-3">
           <span class="text-xs font-semibold" style="color:var(--blue)">Ver &#8594;</span>
+        </td>
+        <td class="px-4 py-3" onclick="event.stopPropagation()">
+          <form method="post" action="/resultados/eliminar/{{ r.id }}" onsubmit="return confirm('¿Estás segura de que deseas eliminar permanentemente a {{ r.razon_social or \'esta PyME\' }} y sus respuestas del panel? Esta acción no se puede deshacer.');" class="m-0 p-0 flex items-center justify-center">
+            <button type="submit" class="text-gray-400 hover:text-red-600 transition text-sm select-none" title="Eliminar permanentemente">
+              🗑️
+            </button>
+          </form>
         </td>
       </tr>
       {% else %}
