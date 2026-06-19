@@ -84,7 +84,7 @@
                    style="width:{{ r.pct }}%;
                           background:{% if r.pct >= 60 %}var(--blue){% else %}var(--gold){% endif %}"></div>
             </div>
-            <span class="font-bold text-xs" style="color:var(--navy)">{{ r.pct }}%</span>
+            <span class="font-bold text-xs shrink-0" style="color:var(--navy)">{{ r.score }} / {{ r.max_score }}</span>
           </div>
           {% else %}
           <span class="text-gray-300 text-xs">—</span>
