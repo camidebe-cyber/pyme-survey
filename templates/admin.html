@@ -150,53 +150,74 @@
   </div>
 
   <!-- ─── Links de red ─────────────────────────────────────────────── -->
-  <div class="grid md:grid-cols-2 gap-4 mb-7">
+  <div class="grid md:grid-cols-3 gap-4 mb-7">
 
     <!-- Link Formulario -->
-    <div class="bg-white rounded-2xl shadow-sm p-5" style="border-left:5px solid #0053e2">
-      <div class="flex items-center gap-2 mb-3">
-        <span class="text-xl">&#128203;</span>
-        <div>
-          <p class="font-bold text-sm" style="color:var(--navy)">Link Formulario Proveedores</p>
-          <p class="text-xs text-gray-400">Comparte este link con tus PyMEs</p>
+    <div class="bg-white rounded-2xl shadow-sm p-5 flex flex-col justify-between" style="border-left:5px solid #0053e2">
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-xl">&#128203;</span>
+          <div>
+            <p class="font-bold text-sm" style="color:var(--navy)">Link Formulario Proveedores</p>
+            <p class="text-xs text-gray-400">Comparte este link con tus PyMEs</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <input id="link-form" type="text" readonly
+                 value="{{ survey_url }}formulario"
+                 class="flex-1 rounded-xl border-2 px-3 py-2 text-xs font-mono
+                        text-gray-600 bg-blue-50 cursor-pointer select-all"
+                 style="border-color:#0053e2" onclick="this.select()">
+          <a href="{{ survey_url }}formulario" target="_blank"
+             class="px-3 py-2 rounded-xl text-sm font-bold border-2 shrink-0"
+             style="border-color:#0053e2; color:#0053e2">&#8599;</a>
+          <button onclick="copyLink('link-form','btn-form')"
+                  id="btn-form"
+                  class="copy-btn px-4 py-2 rounded-xl text-sm font-bold border-2 shrink-0"
+                  style="border-color:#0053e2; color:#0053e2">Copiar</button>
         </div>
       </div>
-      <div class="flex items-center gap-2">
-        <input id="link-form" type="text" readonly
-               value="{{ survey_url }}formulario"
-               class="flex-1 rounded-xl border-2 px-3 py-2 text-xs font-mono
-                      text-gray-600 bg-blue-50 cursor-pointer select-all"
-               style="border-color:#0053e2" onclick="this.select()">
-        <a href="{{ survey_url }}formulario" target="_blank"
-           class="px-3 py-2 rounded-xl text-sm font-bold border-2 shrink-0"
-           style="border-color:#0053e2; color:#0053e2">&#8599;</a>
-        <button onclick="copyLink('link-form','btn-form')"
-                id="btn-form"
-                class="copy-btn px-4 py-2 rounded-xl text-sm font-bold border-2 shrink-0"
-                style="border-color:#0053e2; color:#0053e2">Copiar</button>
+    </div>
+
+    <!-- Descarga Guía PDF Oficial (Acceso Rápido) -->
+    <div class="bg-white rounded-2xl shadow-sm p-5 flex flex-col justify-between" style="border-left:5px solid #ec4899">
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-xl">📄</span>
+          <div>
+            <p class="font-bold text-sm" style="color:var(--navy)">Guía del Proveedor (PDF)</p>
+            <p class="text-xs text-gray-400">Descarga directa de tu guía turquesa</p>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <a href="/descargar-pdf-guia" target="_blank" class="w-full text-center text-white font-bold py-2.5 px-4 rounded-xl text-xs transition hover:opacity-90 flex items-center justify-center gap-1.5" style="background:#ec4899">
+            Descargar Guía PDF 📥
+          </a>
+        </div>
       </div>
     </div>
 
     <!-- Link Panel Admin -->
-    <div class="bg-white rounded-2xl shadow-sm p-5" style="border-left:5px solid #FFC220">
-      <div class="flex items-center gap-2 mb-3">
-        <span class="text-xl">&#128202;</span>
-        <div>
-          <p class="font-bold text-sm" style="color:var(--navy)">Link Panel de Resultados</p>
-          <p class="text-xs text-gray-400">Para ver respuestas en tiempo real</p>
+    <div class="bg-white rounded-2xl shadow-sm p-5 flex flex-col justify-between" style="border-left:5px solid #FFC220">
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-xl">&#128202;</span>
+          <div>
+            <p class="font-bold text-sm" style="color:var(--navy)">Link Panel de Resultados</p>
+            <p class="text-xs text-gray-400">Para ver respuestas en tiempo real</p>
+          </div>
         </div>
-      </div>
-      <div class="flex items-center gap-2">
-        <input id="link-admin" type="text" readonly
-               value="{{ survey_url }}resultados"
-               class="flex-1 rounded-xl border-2 px-3 py-2 text-xs font-mono
-                      text-gray-600 bg-yellow-50 cursor-pointer select-all"
-               style="border-color:#FFC220" onclick="this.select()">
-        <a href="{{ survey_url }}resultados" target="_blank"
-           class="px-3 py-2 rounded-xl text-sm font-bold border-2 shrink-0"
-           style="border-color:#FFC220; color:#7a4f00">&#8599;</a>
-        <button onclick="copyLink('link-admin','btn-admin')"
-                id="btn-admin"
+        <div class="flex items-center gap-2">
+          <input id="link-admin" type="text" readonly
+                 value="{{ survey_url }}resultados"
+                 class="flex-1 rounded-xl border-2 px-3 py-2 text-xs font-mono
+                        text-gray-600 bg-yellow-50 cursor-pointer select-all"
+                 style="border-color:#FFC220" onclick="this.select()">
+          <a href="{{ survey_url }}resultados" target="_blank"
+             class="px-3 py-2 rounded-xl text-sm font-bold border-2 shrink-0"
+             style="border-color:#FFC220; color:#7a4f00">&#8599;</a>
+          <button onclick="copyLink('link-admin','btn-admin')"
+                  id="btn-admin"
                 class="copy-btn px-4 py-2 rounded-xl text-sm font-bold border-2 shrink-0"
                 style="border-color:#FFC220; color:#7a4f00">Copiar</button>
       </div>

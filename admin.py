@@ -155,6 +155,22 @@ async def descargar_excel_manual():
         return HTMLResponse("Archivo no disponible en este momento", status_code=404)
 
 
+# ── Descarga de Guía PDF (Acceso Rápido) ─────────────────────────────────────
+@router.get("/descargar-pdf-guia")
+async def descargar_pdf_guia():
+    """Permite descargar la Guía PDF oficial del Proveedor en el Dashboard."""
+    try:
+        file_path = Path(__file__).parent.parent / "GUIA_ENCUESTA_PYME.pdf"
+        return FileResponse(
+            path=file_path,
+            filename="GUIA_ENCUESTA_PYME.pdf",
+            media_type="application/pdf"
+        )
+    except Exception as e:
+        print(f"Error sirviendo Guia PDF de descarga: {e}")
+        return HTMLResponse("Archivo no disponible en este momento", status_code=404)
+
+
 # ── Eliminación de PyME Manual (Tachito de Basura) ───────────────────────────
 @router.post("/resultados/eliminar/{session_id}")
 async def eliminar_sesion(session_id: str):
