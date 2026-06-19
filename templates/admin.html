@@ -217,7 +217,71 @@
        hx-get="/resultados/live?q={{ q }}"
        hx-trigger="every 20s"
        hx-swap="innerHTML">
+  <div id="live-panel"
+       hx-get="/resultados/live?q={{ q }}"
+       hx-trigger="every 20s"
+       hx-swap="innerHTML">
     {% include 'admin_live.html' %}
+  </div>
+
+  <!-- 📊 Guía de Puntajes Colapsable -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mt-8 mb-7">
+    <button onclick="toggleScoringGuide()" class="w-full flex items-center justify-between font-extrabold text-lg text-left" style="color:var(--navy)">
+      <span class="flex items-center gap-2">
+        <span>📊</span> Guía de Puntajes & Estructura del Diagnóstico (46 puntos máx.)
+      </span>
+      <span id="guide-arrow" class="text-xl transition-transform select-none" style="transition: transform .2s">&#9662;</span>
+    </button>
+    
+    <div id="scoring-guide" class="hidden mt-5 border-t border-gray-100 pt-5 flex flex-col gap-6">
+      <div class="bg-blue-50 border-l-4 border-blue-600 p-4 rounded-xl text-xs leading-relaxed" style="color:var(--navy)">
+        <strong>¿Cómo se evalúa?</strong> Las preguntas cuantitativas (de opción múltiple) suman de 0 a 2 puntos. El puntaje máximo total acumulable es de <strong>46 puntos</strong>. Las preguntas de tipo texto libre o datos de contacto son cualitativas y no suman puntos.
+        <br><strong class="text-pink-600">• PyME Madura:</strong> Requiere obtener un puntaje igual o superior a <strong>40 de los 46 puntos máximos</strong>.
+        <br><strong>• PyME Intermedia:</strong> Se asigna a puntajes inferiores a <strong>40 puntos</strong>.
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        {% for q in questions %}
+        <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl flex flex-col justify-between shadow-sm">
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-xl shrink-0">{{ q.emoji }}</span>
+              <span class="text-[10px] font-bold uppercase text-gray-500 bg-gray-200 px-2 py-0.5 rounded">ID: {{ q.id }}</span>
+              <span class="text-[10px] font-bold uppercase text-blue-700 bg-blue-50 px-2 py-0.5 rounded">{{ q.block }}</span>
+            </div>
+            <h4 class="font-bold text-sm text-slate-800 leading-snug">{{ q.text }}</h4>
+            {% if q.subtitle %}
+            <p class="text-[11px] text-gray-400 mt-1 leading-tight">{{ q.subtitle }}</p>
+            {% endif %}
+          </div>
+          
+          <div class="mt-4 border-t border-slate-200 pt-3">
+            <h5 class="text-[9px] font-extrabold uppercase text-gray-400 tracking-wider mb-2">Escala de Puntajes:</h5>
+            {% if q.score_map %}
+            <ul class="flex flex-col gap-1.5 text-xs text-gray-700">
+              {% for opt in q.options %}
+              {% set val = opt.value %}
+              {% if val in q.score_map %}
+              <li class="flex justify-between items-center bg-white border border-slate-100 px-2 py-1 rounded">
+                <span class="font-medium flex items-center gap-1.5 text-slate-600">
+                  {% if opt.icon %}<span>{{ opt.icon }}</span>{% endif %}
+                  {{ opt.label }}
+                </span>
+                <span class="font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded text-[10px] shrink-0">
+                  +{{ q.score_map[val] }} pto{{ 's' if q.score_map[val] != 1 else '' }}
+                </span>
+              </li>
+              {% endif %}
+              {% endfor %}
+            </ul>
+            {% else %}
+            <span class="text-xs text-gray-400 italic">Pregunta cualitativa (no otorga puntos)</span>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
   </div>
 </main>
 
@@ -243,6 +307,18 @@ function copyLink(inputId, btnId) {
     document.execCommand('copy');
     done();
   });
+}
+
+function toggleScoringGuide() {
+  const guide = document.getElementById('scoring-guide');
+  const arrow = document.getElementById('guide-arrow');
+  if (guide.classList.contains('hidden')) {
+    guide.classList.remove('hidden');
+    arrow.style.transform = 'rotate(180deg)';
+  } else {
+    guide.classList.add('hidden');
+    arrow.style.transform = 'rotate(0deg)';
+  }
 }
 </script>
 </body>

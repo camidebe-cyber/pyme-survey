@@ -222,6 +222,8 @@ async def dashboard(request: Request, q: str = ""):
                  or q_low in r["email"].lower()]
     stats = _stats(all_rows)
     survey_url, net_type = get_survey_url()
+    
+    from questions import QUESTIONS, BLOCKS
     return templates.TemplateResponse(request, "admin.html", {
         "rows":        rows,
         "stats":       stats,
@@ -230,6 +232,8 @@ async def dashboard(request: Request, q: str = ""):
         "survey_url":  survey_url,
         "net_type":    net_type,
         "now":         datetime.now().strftime("%H:%M:%S"),
+        "questions":   QUESTIONS,
+        "blocks":      BLOCKS,
     })
 
 
