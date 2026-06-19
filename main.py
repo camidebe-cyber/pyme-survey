@@ -2,6 +2,7 @@
 FastAPI app - Cuestionario PyME Walmart
 SQLite para persistir respuestas. HTMX para UX tipo Typeform.
 """
+import asyncio
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -42,6 +43,9 @@ app.include_router(formulario_router)
 
 # ── Survey helpers ────────────────────────────────────────────────────────
 def progress_pct(q_index: int) -> int:
+    # Si estamos en la última pregunta o ya terminando, forzar el 100% para que no diga 96%
+    if q_index >= TOTAL_Q - 1:
+        return 100
     return round((q_index / TOTAL_Q) * 100)
 
 
