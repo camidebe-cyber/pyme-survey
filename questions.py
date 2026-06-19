@@ -430,7 +430,10 @@ def compute_result(answers: dict) -> dict:
         if q["type"] in ("multi", "text", "textarea"):
             continue  # cualitativos, no puntuan
 
-        val     = answers[qid].split("|||")[0]  # ignorar followup
+        val_raw = answers.get(qid)
+        if val_raw is None:
+            continue
+        val = str(val_raw).split("|||")[0]  # ignorar followup
         pts     = q["score_map"].get(val, 0)
         max_pts = max(q["score_map"].values()) if q["score_map"] else 0
         score     += pts

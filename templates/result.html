@@ -28,20 +28,13 @@
 
 <!-- Header -->
 <header class="bg-white shadow-sm">
-  <div class="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
-    <svg width="30" height="30" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
-      <g fill="#FFC220">
-        <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(0   30 30)"/>
-        <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(60  30 30)"/>
-        <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(120 30 30)"/>
-        <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(180 30 30)"/>
-        <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(240 30 30)"/>
-        <ellipse cx="30" cy="7" rx="4.2" ry="8.5" transform="rotate(300 30 30)"/>
-      </g>
-    </svg>
-    <div>
-      <div class="font-bold text-sm" style="color:var(--navy)">Walmart Chile &bull; Programa PyME</div>
-      <div class="text-xs text-gray-400">Diagnóstico de Madurez Retail</div>
+  <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <img src="/static/walmart_logo_clean.png" alt="Walmart Logo" class="h-6 object-contain" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/1/12/Walmart_logo.svg'; this.style.height='20px'">
+      <div>
+        <div class="font-bold text-sm text-slate-700">Walmart Chile &bull; Programa PyME</div>
+        <div class="text-xs text-gray-400">Diagnóstico de Madurez Retail</div>
+      </div>
     </div>
   </div>
   <div class="h-1 w-full" style="background:linear-gradient(90deg,var(--blue),var(--gold))"></div>
@@ -66,12 +59,12 @@
   </div>
 
   <!-- Mensaje de gracias -->
-  <div class="fade-up fade-up-1">
-    <h1 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight" style="color:var(--navy)">
-      ¡Muchas gracias{% if company %}, {{ company }}{% endif %}! 🎉
+  <div class="fade-up fade-up-1 px-2">
+    <h1 class="text-3xl md:text-5xl font-extrabold mb-4 leading-tight" style="color:var(--navy)">
+      ¡Muchas gracias, nos vemos pronto! 👩🏻‍💻✨
     </h1>
-    <p class="text-gray-500 text-lg leading-relaxed max-w-lg mx-auto">
-      Completaste el cuestionario de diagnóstico del
+    <p class="text-gray-500 text-base md:text-lg leading-relaxed max-w-lg mx-auto">
+      Completaste con éxito el cuestionario de diagnóstico de madurez del
       <strong style="color:var(--navy)">Programa PyME Walmart Chile</strong>.
       Tu información fue registrada exitosamente.
     </p>

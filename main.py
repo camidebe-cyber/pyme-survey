@@ -8,6 +8,7 @@ from pathlib import Path
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 
 from db import create_session, get_session, save_answer, get_answers, mark_complete, init_db
 from questions import BLOCKS, QUESTIONS, compute_result
@@ -26,6 +27,9 @@ async def lifespan(app: FastAPI):
 
 app       = FastAPI(lifespan=lifespan)
 templates = Jinja2Templates(directory=TEMPL)
+
+# Montar estáticos para servir el logo de Walmart limpio
+app.mount("/static", StaticFiles(directory=Path(__file__).parent), name="static")
 
 # Registrar rutas del admin
 from admin import router as admin_router  # noqa: E402
